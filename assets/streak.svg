@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 150" width="900" height="150" role="img"
+  aria-label="Bảy ngày ôn thi, mỗi ngày một ô sáng lên">
+  <defs>
+    <linearGradient id="dayOn" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+    <style>
+      .t { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    </style>
+  </defs>
+
+  <rect width="900" height="150" rx="16" fill="#071612" stroke="#1f3d38" stroke-width="2" />
+
+  <text class="t" x="34" y="38" fill="#7f9a95" font-size="12" font-weight="700" letter-spacing="3">
+    CHUỖI NGÀY ÔN — MỖI NGÀY MỘT Ô SÁNG
+  </text>
+
+  <!-- 7 ô ngày -->
+  <g class="t">
+    <!-- Ngày 1 -->
+    <g>
+      <rect x="34" y="56" width="106" height="60" rx="12" fill="#0f2a26" stroke="#1f3d38" />
+      <rect x="34" y="56" width="106" height="60" rx="12" fill="url(#dayOn)" opacity="0">
+        <animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;1;1;1;1;1;1;1;0"
+          keyTimes="0;.08;.22;.36;.5;.64;.78;.95;1" />
+      </rect>
+      <text x="87" y="82" fill="#e6fff8" font-size="13" font-weight="700" text-anchor="middle">Ngày 1</text>
+      <text x="87" y="102" fill="#9fd6c8" font-size="11" text-anchor="middle">30 câu</text>
+    </g>
+    <!-- Ngày 2 -->
+    <g>
+      <rect x="152" y="56" width="106" height="60" rx="12" fill="#0f2a26" stroke="#1f3d38" />
+      <rect x="152" y="56" width="106" height="60" rx="12" fill="url(#dayOn)" opacity="0">
+        <animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;1;1;1;1;1;1;0"
+          keyTimes="0;.14;.22;.36;.5;.64;.78;.95;1" />
+      </rect>
+      <text x="205" y="82" fill="#e6fff8" font-size="13" font-weight="700" text-anchor="middle">Ngày 2</text>
+      <text x="205" y="102" fill="#9fd6c8" font-size="11" text-anchor="middle">60 câu</text>
+    </g>
+    <!-- Ngày 3 -->
+    <g>
+      <rect x="270" y="56" width="106" height="60" rx="12" fill="#0f2a26" stroke="#1f3d38" />
+      <rect x="270" y="56" width="106" height="60" rx="12" fill="url(#dayOn)" opacity="0">
+        <animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0;1;1;1;1;1;0"
+          keyTimes="0;.14;.28;.36;.5;.64;.78;.95;1" />
+      </rect>
+      <text x="323" y="82" fill="#e6fff8" font-size="13" font-weight="700" text-anchor="middle">Ngày 3</text>
+      <text x="323" y="102" fill="#9fd6c8" font-size="11" text-anchor="middle">100 câu</text>
+    </g>
+    <!-- Ngày 4 -->
+    <g>
+      <rect x="388" y="56" width="106" height="60" rx="12" fill="#0f2a26" stroke="#1f3d38" />
+      <rect x="388" y="56" width="106" height="60" rx="12" fill="url(#dayOn)" opacity="0">
+        <animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0;0;1;1;1;1;0"
+          keyTimes="0;.14;.28;.42;.5;.64;.78;.95;1" />
+      </rect>
+      <text x="441" y="82" fill="#e6fff8" font-size="13" font-weight="700" text-anchor="middle">Ngày 4</text>
+      <text x="441" y="102" fill="#9fd6c8" font-size="11" text-anchor="middle">lọc câu ★</text>
+    </g>
+    <!-- Ngày 5 -->
+    <g>
+      <rect x="506" y="56" width="106" height="60" rx="12" fill="#0f2a26" stroke="#1f3d38" />
+      <rect x="506" y="56" width="106" height="60" rx="12" fill="url(#dayOn)" opacity="0">
+        <animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0;0;0;1;1;1;0"
+          keyTimes="0;.14;.28;.42;.56;.64;.78;.95;1" />
+      </rect>
+      <text x="559" y="82" fill="#e6fff8" font-size="13" font-weight="700" text-anchor="middle">Ngày 5</text>
+      <text x="559" y="102" fill="#9fd6c8" font-size="11" text-anchor="middle">cày câu sai</text>
+    </g>
+    <!-- Ngày 6 -->
+    <g>
+      <rect x="624" y="56" width="106" height="60" rx="12" fill="#0f2a26" stroke="#1f3d38" />
+      <rect x="624" y="56" width="106" height="60" rx="12" fill="url(#dayOn)" opacity="0">
+        <animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0;0;0;0;1;1;0"
+          keyTimes="0;.14;.28;.42;.56;.7;.78;.95;1" />
+      </rect>
+      <text x="677" y="82" fill="#e6fff8" font-size="13" font-weight="700" text-anchor="middle">Ngày 6</text>
+      <text x="677" y="102" fill="#9fd6c8" font-size="11" text-anchor="middle">403 câu</text>
+    </g>
+    <!-- Ngày thi -->
+    <g>
+      <rect x="742" y="56" width="124" height="60" rx="12" fill="#0f2a26" stroke="#34d399" stroke-dasharray="5 4" />
+      <rect x="742" y="56" width="124" height="60" rx="12" fill="url(#dayOn)" opacity="0">
+        <animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0;0;0;0;0;1;0"
+          keyTimes="0;.14;.28;.42;.56;.7;.84;.9;1" />
+      </rect>
+      <text x="804" y="82" fill="#e6fff8" font-size="13" font-weight="800" text-anchor="middle">NGÀY THI</text>
+      <text x="804" y="102" fill="#9fd6c8" font-size="11" text-anchor="middle">bình tĩnh</text>
+      <g opacity="0">
+        <animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0;0;0;0;0;1;0"
+          keyTimes="0;.14;.28;.42;.56;.7;.86;.92;1" />
+        <text x="804" y="46" font-size="20" text-anchor="middle">🎉</text>
+      </g>
+    </g>
+  </g>
+</svg>

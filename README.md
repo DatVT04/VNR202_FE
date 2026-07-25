@@ -1,132 +1,177 @@
 <div align="center">
 
-```
-██╗   ██╗███╗   ██╗██████╗ ██████╗  ██████╗ ██████╗
-██║   ██║████╗  ██║██╔══██╗╚════██╗██╔═████╗╚════██╗
-██║   ██║██╔██╗ ██║██████╔╝ █████╔╝██║██╔██║ █████╔╝
-╚██╗ ██╔╝██║╚██╗██║██╔══██╗██╔═══╝ ████╔╝██║██╔═══╝
- ╚████╔╝ ██║ ╚████║██║  ██║███████╗╚██████╔╝███████╗
-  ╚═══╝  ╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚══════╝
-```
+<img src="./assets/hero.svg" width="100%" alt="VNR202 Study — ôn 403 câu trên máy tính và điện thoại" />
 
-### 🇻🇳 Lịch sử Đảng Cộng sản Việt Nam — Luyện đề online
+<br><br>
 
-*Học một mình thì buồn, học với con mèo chạy quanh màn hình thì đỡ hơn.*
+**403 câu hỏi. Hai màn hình. Sáu ngày. Một con mèo.**
 
-<br>
-
-![Questions](https://img.shields.io/badge/Ng%C3%A2n_h%C3%A0ng_%C4%91%E1%BB%81-403_c%C3%A2u-e63946?style=for-the-badge&labelColor=1d3557)
-![Stack](https://img.shields.io/badge/Stack-Vanilla_JS-f1c40f?style=for-the-badge&labelColor=1d3557)
-![Framework](https://img.shields.io/badge/Framework-KH%C3%94NG-2a9d8f?style=for-the-badge&labelColor=1d3557)
-![Deploy](https://img.shields.io/badge/Deploy-Vercel-000000?style=for-the-badge&logo=vercel&labelColor=1d3557)
-
-![Redis](https://img.shields.io/badge/Redis-chat_%2B_stats-DC382D?style=flat-square&logo=redis&logoColor=white)
-![Neko](https://img.shields.io/badge/Neko-%C4%91ang_ch%E1%BA%A1y-ff70a6?style=flat-square)
-![Build](https://img.shields.io/badge/build-ch%E1%BA%AFc_l%C3%A0_passing-brightgreen?style=flat-square)
-![Diem](https://img.shields.io/badge/%C4%91i%E1%BB%83m_mong_%C4%91%E1%BB%A3i-qua_m%C3%B4n-blueviolet?style=flat-square)
-
-<br>
-
-```
-   ┌──────────────────────────────────────────────────────┐
-   │  ★  403 câu     ⚡ Trộn ngẫu nhiên     💬 Chat nhóm  │
-   │  🔍 Tìm kiếm    ↺ Làm lại từng câu     🐱 Neko       │
-   └──────────────────────────────────────────────────────┘
-```
+*Đây không phải tài liệu kỹ thuật. Đây là kế hoạch qua môn.*
 
 </div>
 
----
+<img src="./assets/divider.svg" width="100%" alt="" />
 
-## 🎯 Cái này là gì?
+## Chuyện xảy ra vào một tối thứ Ba
 
-Một trang web trắc nghiệm **một file HTML, không framework, không build step**.
-Mở lên là làm bài. Ngân hàng đề nằm trong `ques.md` — muốn thêm câu thì gõ vào file text, xong.
+Bạn mở đề cương. 403 câu. Cuộn xuống. Vẫn còn. Cuộn tiếp. Vẫn còn.
+
+Đóng lại. Mở TikTok.
+
+Đó chính xác là lý do repo này tồn tại. Không phải vì đề khó — mà vì **một file 403 câu thì không ai học nổi**. Còn 403 câu chia thành những lần mở điện thoại 4 phút lúc xếp hàng mua trà sữa thì có.
+
+<img src="./assets/divider.svg" width="100%" alt="" />
+
+## Sáu ngày, một chiến thuật
+
+<img src="./assets/streak.svg" width="100%" alt="Chuỗi sáu ngày ôn thi" />
 
 <table>
 <tr>
-<td width="50%" valign="top">
-
-**Làm bài**
-- Trộn ngẫu nhiên câu + đáp án
-- Chấm ngay, hiện đáp án đúng
-- ↺ Làm lại riêng từng câu
-- ⚡ Chế độ *Tự next*
-
-</td>
-<td width="50%" valign="top">
-
-**Ôn có chiến thuật**
-- ★ Đánh dấu câu hay sai
-- Lọc *chỉ xem câu đã đánh dấu*
-- Bộ đếm câu sai realtime
-- 🔍 Tìm kiếm cả ngân hàng đề
-
-</td>
+<th width="16%">Ngày</th>
+<th width="24%">Ở đâu</th>
+<th>Làm gì</th>
 </tr>
-<tr>
-<td valign="top">
 
-**Học cùng nhau**
-- 💬 Chat thảo luận + emoji + ảnh
-- Đếm số người đang online học
+<tr>
+<td align="center"><b>1–2</b><br><sub>làm quen</sub></td>
+<td>📱 Điện thoại<br><sub>lúc chờ, lúc nằm</sub></td>
+<td>Mở đại, làm 30–60 câu. <b>Không cần đúng.</b> Mục tiêu duy nhất: biết đề hỏi kiểu gì. Sai câu nào bấm ★ câu đó rồi lướt tiếp.</td>
+</tr>
+
+<tr>
+<td align="center"><b>3</b><br><sub>vào guồng</sub></td>
+<td>💻 Máy tính<br><sub>ngồi tử tế 1 tiếng</sub></td>
+<td>Bật <b>Tự next</b>, chạy 100 câu liền mạch. Cái này giống phòng thi nhất: không có thời gian đắn đo.</td>
+</tr>
+
+<tr>
+<td align="center"><b>4</b><br><sub>trả nợ</sub></td>
+<td>📱 hoặc 💻</td>
+<td>Bật lọc <b>★ Câu hỏi đã đánh dấu</b>. Chỉ làm đúng những câu từng sai. Đây là ngày ăn điểm nhiều nhất.</td>
+</tr>
+
+<tr>
+<td align="center"><b>5</b><br><sub>quét sạch</sub></td>
+<td>💻 Máy tính</td>
+<td><b>Refresh → Tạo mới &amp; trộn câu</b>. Đề xáo lại từ đầu. Câu nào vẫn sai nghĩa là bạn đang thuộc <i>vị trí đáp án</i> chứ chưa thuộc <i>kiến thức</i>.</td>
+</tr>
+
+<tr>
+<td align="center"><b>6</b><br><sub>tổng duyệt</sub></td>
+<td>💻 Máy tính</td>
+<td>Chạy hết 403 câu. Đếm câu sai. Dưới 20 là ngủ ngon được rồi.</td>
+</tr>
+
+<tr>
+<td align="center"><b>Thi</b></td>
+<td>🏫 Phòng thi</td>
+<td>Không mở app nữa. Ăn sáng. Đi sớm.</td>
+</tr>
+</table>
+
+<img src="./assets/divider.svg" width="100%" alt="" />
+
+## Ba thứ khiến bạn học được lâu hơn bạn tưởng
+
+<table>
+<tr>
+<td width="33%" valign="top" align="center">
+
+### 🐱
+**Neko**
+
+Một con mèo chạy theo con trỏ. Sai nhiều nó an ủi, đúng liên tiếp nó ăn mừng. Thỉnh thoảng tha về một mảnh giấy ghi keyword.
+
+<sub>Nghe vô nghĩa. Nhưng bạn sẽ học lâu hơn 20 phút chỉ vì không nỡ đóng tab.</sub>
 
 </td>
-<td valign="top">
+<td width="33%" valign="top" align="center">
 
-**Vui là chính**
-- 🐱 Mèo Neko chạy theo chuột
-- Tab Note tra keyword nhanh
+### 👥
+**Có người học cùng**
+
+Thanh đầu trang hiện số người **đang mở web ngay lúc này**, số người **học hôm nay**, và **tổng lượt vào**.
+
+<sub>2 giờ sáng thấy con số "Đang học: 4" — tự nhiên thấy đỡ cô đơn hẳn.</sub>
+
+</td>
+<td width="33%" valign="top" align="center">
+
+### 💬
+**Khung chat**
+
+Gặp câu khó thì ném vào chat. Đặt cho mình một biệt danh, kiểu *Cú Đêm 77*.
+
+<sub>Cãi nhau về một đáp án là cách nhớ nó lâu nhất.</sub>
 
 </td>
 </tr>
 </table>
 
----
+<img src="./assets/divider.svg" width="100%" alt="" />
 
-## 🗺️ Bản đồ project
+## Mẹo nhỏ, ăn điểm thật
 
+> **★ là bạn thân.** Đừng tiếc tay bấm sao. Cuối cùng bạn chỉ cần ôn đúng nhóm câu đó.
+>
+> **Đừng học theo thứ tự.** Não rất giỏi thuộc lòng thứ tự mà không hiểu gì. Trộn câu là để phá trò đó.
+>
+> **Sai không sao, sai xong nhớ là được.** Bộ đếm câu sai không phải để phán xét, nó là danh sách việc cần làm.
+>
+> **Học 4 phút vẫn hơn không học.** Điện thoại mở ra là vào thẳng câu hỏi, không màn hình chờ, không đăng nhập.
+>
+> **Đêm trước ngày thi thì ngủ.** Câu thứ 403 không cứu được bạn, nhưng thiếu ngủ thì dìm được bạn.
+
+<img src="./assets/divider.svg" width="100%" alt="" />
+
+## Trên hai màn hình
+
+<table>
+<tr>
+<th width="50%">💻 Máy tính — <i>phòng thi mô phỏng</i></th>
+<th width="50%">📱 Điện thoại — <i>tranh thủ mọi lúc</i></th>
+</tr>
+<tr valign="top">
+<td>
+
+Sidebar luôn hiện bên trái. Bấm `←` `→` để chuyển câu, `Space` để xác nhận — không cần chạm chuột.
+
+Hợp cho những buổi cày dài, cần nhìn tổng thể tiến độ và mở khung chat song song.
+
+</td>
+<td>
+
+Thanh dính trên đỉnh hiện đủ số liệu. Nút **Tiếp theo** dính đáy, ngón cái với tới được.
+
+Còn lại thu hết vào nút **☰** — vì lúc lướt bạn chỉ cần: đọc, chạm, next.
+
+</td>
+</tr>
+</table>
+
+<img src="./assets/divider.svg" width="100%" alt="" />
+
+<details>
+<summary><h3>🔧 Sổ tay kỹ thuật <sub>(bấm mở nếu bạn định sửa code)</sub></h3></summary>
+
+<br>
+
+### Chạy thử
+
+```bash
+# Chỉ làm bài
+python3 -m http.server 8000     # rồi mở http://localhost:8000
+
+# Đầy đủ, có chat và bộ đếm
+npm install && npx vercel dev   # cần .env với REDIS_URL=redis://...
 ```
-VNR202_FE/
-│
-├── 🏠 index.html ········· giao diện chính
-├── 🧠 app.js ············· parse đề · chấm điểm · chat · tìm kiếm
-├── 🎨 styles.css ········· toàn bộ style
-├── 🐱 neko.js ············ mèo chạy theo con trỏ
-├── 📒 notes_data.js ······ dữ liệu tab Note (đang trống)
-├── 📚 ques.md ············ ⭐ NGÂN HÀNG ĐỀ — sửa ở đây
-│
-├── 🔌 api/
-│   ├── chat.js ·········· serverless chat  (Redis)
-│   └── stats.js ········· đếm người online (Redis)
-│
-└── 📦 resource/
-    ├── emoji.json
-    └── oneko.gif
-```
 
----
+> Phải chạy qua HTTP server. Double-click thẳng `index.html` sẽ chết ở bước `fetch('./ques.md')`.
 
-## ⚙️ Luồng chạy
+### Thêm câu hỏi
 
-```mermaid
-flowchart LR
-    A[📚 ques.md] -->|fetch| B[🧠 parseQuestions]
-    B -->|tách @@@ ... ###| C[📦 403 câu]
-    C -->|shuffle| D[🖥️ Render]
-    D --> E{Chọn đáp án}
-    E -->|Đúng| F[✅ +1]
-    E -->|Sai| G[❌ Bộ đếm câu sai]
-    G --> H[★ Đánh dấu để ôn lại]
-    F --> D
-    H --> D
-```
-
----
-
-## ✍️ Cách thêm câu hỏi
-
-Chỉ cần sửa `ques.md`. Không đụng vào code.
+Sửa `ques.md`, không đụng code:
 
 ```
 Lời kêu gọi toàn quốc kháng chiến của Chủ tịch Hồ Chí Minh được phát ra vào thời gian nào?
@@ -137,103 +182,58 @@ D. 19-12-1946
 @@@D###
 ```
 
-> **Công thức:** `đề bài` → `các lựa chọn A→H` → `@@@đáp án###`
+| Kiểu | Cú pháp |
+|:--|:--|
+| Chỉ chữ cái | `@@@D###` |
+| Ghi đầy đủ | `@@@D. 19-12-1946###` |
+| Nhiều đáp án đúng | `@@@A, C###` |
+| Kèm giải thích | `@@@D` → xuống dòng ghi giải thích → `###` |
+| Tối đa 8 lựa chọn | `A.` đến `H.` |
 
-<details>
-<summary><b>📐 Các biến thể khác (bấm để xem)</b></summary>
+⚠️ Không đánh số thứ tự đầu câu — app trộn ngẫu nhiên nên số sẽ sai lệch.
 
-<br>
+### Cấu trúc
 
-| Kiểu | Cú pháp | Ghi chú |
-|:--|:--|:--|
-| Chỉ chữ cái | `@@@D###` | Gọn nhất, khuyên dùng |
-| Ghi đầy đủ | `@@@D. 19-12-1946###` | Cũng chạy được |
-| Nhiều đáp án | `@@@A, C###` | Phải chọn đủ mới tính đúng |
-| Có giải thích | `@@@D`<br>`Ngày 19/12/1946...`<br>`###` | Dòng 2 trở đi là giải thích |
-| Tới 8 lựa chọn | `A.` → `H.` | Đề có A–E vẫn parse bình thường |
+```
+index.html     Giao diện
+app.js         Parse đề · chấm điểm · chat · tìm kiếm · thống kê
+styles.css     Style (có khối riêng cho mobile ở cuối file)
+neko.js        Mèo Neko
+notes_data.js  Dữ liệu tab Note (đang trống)
+ques.md        403 câu hỏi
+api/chat.js    Chat            (Redis)
+api/stats.js   Bộ đếm cộng đồng (Redis)
+assets/        Ảnh động của README này
+```
 
-⚠️ **Không** đánh số thứ tự đầu câu (`1.`, `2.`) — app trộn ngẫu nhiên nên số sẽ sai lệch.
+### Ba con số được tính thế nào
+
+| Chỉ số | Công thức |
+|:--|:--|
+| **Đang học** | Mỗi máy ping 5 giây/lần. Server xoá ai im lặng quá 15 giây rồi đếm số còn lại. |
+| **Học hôm nay** | HyperLogLog theo ngày (giờ VN, UTC+7) — đếm số `userId` khác nhau, reset lúc 00:00. |
+| **Lượt vào** | Bộ đếm cộng dồn, `INCR` một lần cho mỗi tab mở mới. |
+
+Danh tính là `userId` ngẫu nhiên trong `localStorage` → cùng máy cùng trình duyệt tính là một người.
+
+### Deploy
+
+Push lên Vercel (`vercel.json` có sẵn, không cần cấu hình build). Khai báo env `REDIS_URL` hoặc `KV_URL`.
+Thiếu Redis thì chat và bộ đếm im lặng, **phần làm bài vẫn chạy bình thường**.
 
 </details>
-
----
-
-## 🚀 Chạy thử
-
-<table>
-<tr><th width="50%">Chỉ làm bài</th><th width="50%">Đầy đủ (có chat)</th></tr>
-<tr>
-<td valign="top">
-
-```bash
-python3 -m http.server 8000
-```
-→ mở `http://localhost:8000`
-
-Không cần cài gì thêm.
-
-</td>
-<td valign="top">
-
-```bash
-npm install
-npx vercel dev
-```
-Cần `.env`:
-```
-REDIS_URL=redis://...
-```
-
-</td>
-</tr>
-</table>
-
-> ⚠️ Phải chạy qua HTTP server. Double-click thẳng `index.html` sẽ **chết** ở bước `fetch('./ques.md')`.
-
----
-
-## ☁️ Deploy
-
-Push lên Vercel là xong — `vercel.json` có sẵn, không cần cấu hình build.
-
-| Bước | Việc cần làm |
-|:-:|:--|
-| 1️⃣ | Import repo vào Vercel |
-| 2️⃣ | Thêm env `REDIS_URL` (hoặc `KV_URL`) |
-| 3️⃣ | Deploy |
-
-> Không có Redis thì chat và bộ đếm online sẽ im lặng — **phần làm bài vẫn chạy bình thường**.
-
----
-
-## 📊 Thống kê ngân hàng đề
-
-```
-Tổng:  403 câu
-
-A  ████████████████████████████████████  146   36.2%
-B  ███████████████████████               92    22.8%
-D  █████████████████████                 87    21.6%
-C  ███████████████████                   78    19.4%
-```
-
-> Đáp án **A** hơi nhiều... nhưng đừng khoanh bừa A. 😉
-
----
-
-## 📌 Ghi chú
-
-- Tab **Note** đang trống (`notes_data.js = []`). Muốn dùng thì điền `window.notesData`
-  theo cấu trúc `section` → `subsection` → `notes` / `warning`.
-- Toàn bộ nội dung học thuật của repo nằm gọn trong `ques.md`. Không có file tài liệu nào khác.
 
 <div align="center">
 <br>
 
 ```
- /\_/\     Chúc ôn thi thuận lợi.
-( o.o )    Sai nhiều không sao — sai xong nhớ là được.
- > ^ <
+ /\_/\     "Sen ơi, còn 21 câu nữa thôi."
+( o.o )
+ > ^ <     — Neko, 2 giờ sáng
 ```
+
+<br>
+
+<sub>Chúc qua môn. Và nếu được điểm cao, nhớ là do bạn học chứ không phải do con mèo.</sub>
 
 </div>

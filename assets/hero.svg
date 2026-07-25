@@ -1,0 +1,200 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" width="900" height="300" role="img"
+  aria-label="VNR202 Study - ôn 403 câu trên máy tính và điện thoại">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1220" />
+      <stop offset="55%" stop-color="#0f2a26" />
+      <stop offset="100%" stop-color="#08312b" />
+    </linearGradient>
+    <linearGradient id="barFill" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#34d399" />
+      <stop offset="100%" stop-color="#a7f3d0" />
+    </linearGradient>
+    <clipPath id="screenClip">
+      <rect x="52" y="112" width="226" height="116" rx="6" />
+    </clipPath>
+    <clipPath id="phoneClip">
+      <rect x="314" y="118" width="72" height="118" rx="4" />
+    </clipPath>
+    <style>
+      .t { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+      .glow { filter: drop-shadow(0 0 6px rgba(52,211,153,.55)); }
+    </style>
+  </defs>
+
+  <rect width="900" height="300" rx="20" fill="url(#bg)" />
+
+  <!-- lưới nền mờ -->
+  <g opacity=".07" stroke="#a7f3d0" stroke-width="1" fill="none">
+    <path d="M0 60H900M0 120H900M0 180H900M0 240H900" />
+    <path d="M150 0V300M300 0V300M450 0V300M600 0V300M750 0V300" />
+  </g>
+
+  <!-- ================= TIÊU ĐỀ ================= -->
+  <g class="t">
+    <text x="50" y="52" fill="#a7f3d0" font-size="13" font-weight="700" letter-spacing="4">
+      LỊCH SỬ ĐẢNG CỘNG SẢN VIỆT NAM
+    </text>
+    <text x="50" y="88" fill="#ffffff" font-size="34" font-weight="800">VNR202 · Luyện đề</text>
+  </g>
+
+  <!-- ================= LAPTOP ================= -->
+  <g>
+    <rect x="46" y="106" width="238" height="128" rx="10" fill="#0b1220" stroke="#1f3d38" stroke-width="2" />
+    <rect x="52" y="112" width="226" height="116" rx="6" fill="#071612" />
+    <g clip-path="url(#screenClip)">
+      <!-- đề bài -->
+      <rect x="62" y="120" width="180" height="6" rx="3" fill="#4b6360" />
+      <rect x="62" y="132" width="130" height="6" rx="3" fill="#3a4f4c" />
+      <!-- 4 đáp án -->
+      <g>
+        <rect x="62" y="150" width="206" height="16" rx="4" fill="#0f2a26" stroke="#1f3d38" />
+        <rect x="62" y="170" width="206" height="16" rx="4" fill="#0f2a26" stroke="#1f3d38" />
+        <rect x="62" y="190" width="206" height="16" rx="4" fill="#0f2a26" stroke="#1f3d38" />
+        <rect x="62" y="210" width="206" height="16" rx="4" fill="#0f2a26" stroke="#1f3d38" />
+      </g>
+      <!-- con trỏ quét qua các đáp án rồi dừng ở đáp án đúng -->
+      <rect x="62" width="206" height="16" rx="4" fill="#34d399" opacity=".18">
+        <animate attributeName="y" dur="6s" repeatCount="indefinite"
+          values="150;170;190;190;190;150" keyTimes="0;.12;.24;.62;.75;1" />
+      </rect>
+      <!-- đáp án đúng sáng lên -->
+      <rect x="62" y="190" width="206" height="16" rx="4" fill="#34d399" opacity="0">
+        <animate attributeName="opacity" dur="6s" repeatCount="indefinite"
+          values="0;0;.85;.85;0;0" keyTimes="0;.26;.32;.62;.68;1" />
+      </rect>
+      <path d="M245 198l4 4 8-9" fill="none" stroke="#052e26" stroke-width="2.5" stroke-linecap="round"
+        stroke-linejoin="round" opacity="0">
+        <animate attributeName="opacity" dur="6s" repeatCount="indefinite"
+          values="0;0;1;1;0;0" keyTimes="0;.28;.34;.62;.68;1" />
+      </path>
+    </g>
+    <!-- chân đế -->
+    <rect x="26" y="236" width="278" height="9" rx="4.5" fill="#1f3d38" />
+    <rect x="140" y="236" width="50" height="4" rx="2" fill="#0b1220" />
+  </g>
+
+  <!-- ================= ĐIỆN THOẠI ================= -->
+  <g>
+    <rect x="308" y="110" width="84" height="134" rx="12" fill="#0b1220" stroke="#1f3d38" stroke-width="2" />
+    <rect x="314" y="118" width="72" height="118" rx="4" fill="#071612" />
+    <rect x="338" y="113" width="24" height="4" rx="2" fill="#1f3d38" />
+    <g clip-path="url(#phoneClip)">
+      <!-- thanh thống kê trên đầu -->
+      <rect x="314" y="118" width="72" height="14" fill="#0f2a26" />
+      <rect x="319" y="123" width="10" height="4" rx="2" fill="#34d399" />
+      <rect x="334" y="123" width="10" height="4" rx="2" fill="#7dd3fc" />
+      <rect x="349" y="123" width="10" height="4" rx="2" fill="#fbbf24" />
+      <rect x="368" y="122" width="12" height="6" rx="2" fill="#3a4f4c" />
+      <!-- đề + đáp án -->
+      <rect x="320" y="140" width="52" height="4" rx="2" fill="#4b6360" />
+      <rect x="320" y="148" width="38" height="4" rx="2" fill="#3a4f4c" />
+      <rect x="320" y="160" width="60" height="12" rx="3" fill="#0f2a26" stroke="#1f3d38" />
+      <rect x="320" y="176" width="60" height="12" rx="3" fill="#0f2a26" stroke="#1f3d38" />
+      <rect x="320" y="192" width="60" height="12" rx="3" fill="#0f2a26" stroke="#1f3d38" />
+      <rect x="320" y="176" width="60" height="12" rx="3" fill="#34d399" opacity="0">
+        <animate attributeName="opacity" dur="6s" repeatCount="indefinite"
+          values="0;0;.85;.85;0;0" keyTimes="0;.42;.48;.78;.84;1" />
+      </rect>
+      <!-- thanh Tiếp theo dính đáy -->
+      <rect x="318" y="216" width="64" height="14" rx="4" fill="#059669" />
+      <rect x="336" y="222" width="28" height="3" rx="1.5" fill="#a7f3d0" />
+    </g>
+    <!-- ngón tay chạm -->
+    <g opacity="0">
+      <circle cx="350" cy="182" r="9" fill="none" stroke="#a7f3d0" stroke-width="2">
+        <animate attributeName="r" dur="6s" repeatCount="indefinite"
+          values="4;4;14;14;4;4" keyTimes="0;.42;.5;.78;.84;1" />
+        <animate attributeName="opacity" dur="6s" repeatCount="indefinite"
+          values="0;0;.9;0;0;0" keyTimes="0;.42;.46;.56;.84;1" />
+      </circle>
+      <animate attributeName="opacity" dur="6s" repeatCount="indefinite" values="0;0;1;1;0;0"
+        keyTimes="0;.4;.44;.8;.84;1" />
+    </g>
+  </g>
+
+  <!-- ================= BẢNG ĐIỂM ================= -->
+  <g class="t">
+    <rect x="424" y="100" width="426" height="134" rx="14" fill="#071612" stroke="#1f3d38" stroke-width="2" />
+    <text x="448" y="128" fill="#7f9a95" font-size="12" font-weight="700" letter-spacing="2">ĐIỂM DỰ KIẾN</text>
+
+    <!-- các mốc điểm nối tiếp nhau -->
+    <g font-size="52" font-weight="800" text-anchor="start">
+      <text x="448" y="188" fill="#f87171" opacity="0">4.0
+        <animate attributeName="opacity" dur="6s" repeatCount="indefinite" values="1;1;0;0;0;0;0"
+          keyTimes="0;.14;.2;.4;.6;.8;1" />
+      </text>
+      <text x="448" y="188" fill="#fbbf24" opacity="0">6.5
+        <animate attributeName="opacity" dur="6s" repeatCount="indefinite" values="0;0;1;1;0;0;0"
+          keyTimes="0;.18;.24;.38;.44;.8;1" />
+      </text>
+      <text x="448" y="188" fill="#a3e635" opacity="0">8.0
+        <animate attributeName="opacity" dur="6s" repeatCount="indefinite" values="0;0;0;1;1;0;0"
+          keyTimes="0;.24;.42;.48;.6;.66;1" />
+      </text>
+      <text x="448" y="188" fill="#34d399" opacity="0" class="glow">9.5
+        <animate attributeName="opacity" dur="6s" repeatCount="indefinite" values="0;0;0;0;1;1;1"
+          keyTimes="0;.24;.48;.64;.7;.95;1" />
+      </text>
+    </g>
+
+    <!-- sao -->
+    <g fill="#fbbf24">
+      <g opacity="0">
+        <path d="M600 150l4.6 9.3 10.3 1.5-7.5 7.3 1.8 10.3-9.2-4.9-9.2 4.9 1.8-10.3-7.5-7.3 10.3-1.5z" />
+        <animate attributeName="opacity" dur="6s" repeatCount="indefinite" values="0;0;1;1;1;1" keyTimes="0;.2;.28;.6;.9;1" />
+      </g>
+      <g opacity="0">
+        <path d="M646 150l4.6 9.3 10.3 1.5-7.5 7.3 1.8 10.3-9.2-4.9-9.2 4.9 1.8-10.3-7.5-7.3 10.3-1.5z" />
+        <animate attributeName="opacity" dur="6s" repeatCount="indefinite" values="0;0;0;1;1;1" keyTimes="0;.2;.44;.52;.9;1" />
+      </g>
+      <g opacity="0">
+        <path d="M692 150l4.6 9.3 10.3 1.5-7.5 7.3 1.8 10.3-9.2-4.9-9.2 4.9 1.8-10.3-7.5-7.3 10.3-1.5z" />
+        <animate attributeName="opacity" dur="6s" repeatCount="indefinite" values="0;0;0;0;1;1" keyTimes="0;.2;.5;.66;.72;1" />
+      </g>
+    </g>
+
+    <text x="448" y="216" fill="#7f9a95" font-size="13">403 câu · máy tính &amp; điện thoại · một con mèo</text>
+  </g>
+
+  <!-- ================= THANH TIẾN ĐỘ + MÈO ================= -->
+  <g>
+    <rect x="50" y="268" width="800" height="8" rx="4" fill="#12312c" />
+    <rect x="50" y="268" width="0" height="8" rx="4" fill="url(#barFill)">
+      <animate attributeName="width" dur="6s" repeatCount="indefinite" values="0;800" keyTimes="0;1" />
+    </rect>
+
+    <!-- mèo Neko chạy dọc thanh tiến độ -->
+    <g>
+      <animateTransform attributeName="transform" type="translate" dur="6s" repeatCount="indefinite"
+        values="42,0; 842,0" keyTimes="0;1" />
+      <g transform="translate(0,246)">
+        <!-- thân -->
+        <ellipse cx="0" cy="10" rx="11" ry="6.5" fill="#fdfdfd" />
+        <!-- đầu -->
+        <circle cx="10" cy="4" r="6" fill="#fdfdfd" />
+        <path d="M6 -1l-1-5 4.5 2.5z" fill="#fdfdfd" />
+        <path d="M14 -1l1-5-4.5 2.5z" fill="#fdfdfd" />
+        <circle cx="8.5" cy="4" r="1" fill="#0b1220" />
+        <circle cx="12.5" cy="4" r="1" fill="#0b1220" />
+        <!-- đuôi vẫy -->
+        <path d="M-11 8c-6-1-8-6-6-9" fill="none" stroke="#fdfdfd" stroke-width="2.6" stroke-linecap="round">
+          <animateTransform attributeName="transform" type="rotate" dur=".5s" repeatCount="indefinite"
+            values="-8 -11 8; 10 -11 8; -8 -11 8" />
+        </path>
+        <!-- chân chạy -->
+        <g fill="#fdfdfd">
+          <rect x="-8" y="14" width="3" height="5" rx="1.5">
+            <animate attributeName="height" dur=".3s" repeatCount="indefinite" values="5;2;5" />
+          </rect>
+          <rect x="-1" y="14" width="3" height="5" rx="1.5">
+            <animate attributeName="height" dur=".3s" repeatCount="indefinite" values="2;5;2" />
+          </rect>
+          <rect x="6" y="14" width="3" height="5" rx="1.5">
+            <animate attributeName="height" dur=".3s" repeatCount="indefinite" values="5;2;5" />
+          </rect>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
