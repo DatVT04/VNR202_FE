@@ -1116,15 +1116,73 @@ const safeStore = {
   },
 };
 
-// Active Learners Tracking
+/* ==========================================================================
+   Danh tính người học
+
+   Không có đăng nhập nên không thể biết chính xác "người". Cách tốt nhất còn
+   lại là nhận dạng TRÌNH DUYỆT, gồm hai lớp:
+
+   1. Dấu vân tay thiết bị — ghép các đặc điểm ít đổi (độ phân giải màn hình,
+      múi giờ, ngôn ngữ, số nhân CPU, nền tảng...) rồi băm lại. Xoá cache hay
+      mở chế độ ẩn danh vẫn ra cùng một mã.
+   2. Mã ngẫu nhiên trong localStorage — để phân biệt hai người dùng chung
+      một máy nhưng khác profile trình duyệt.
+
+   Ghép cả hai: "<vân tay>-<mã ngẫu nhiên rút gọn>". Xoá cache thì phần ngẫu
+   nhiên đổi nhưng vân tay giữ nguyên, nên server vẫn gom được về một người
+   (xem cách gom ở api/stats.js).
+   ========================================================================== */
 const USER_ID_KEY = 'vnr202.user_id';
-function getUserId() {
-  let id = safeStore.get(USER_ID_KEY);
-  if (!id) {
-    id = 'user_' + Math.random().toString(36).substr(2, 9);
-    safeStore.set(USER_ID_KEY, id);
+
+// Băm chuỗi thành mã 8 ký tự (FNV-1a) — đủ dùng, không cần thư viện
+function hashString(str) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < str.length; i += 1) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
   }
-  return id;
+  return (h >>> 0).toString(36).padStart(7, '0').slice(0, 8);
+}
+
+function getDeviceFingerprint() {
+  const n = window.navigator || {};
+  const s = window.screen || {};
+  let timezone = '';
+  try {
+    timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+  } catch (e) { /* trình duyệt cũ */ }
+
+  const parts = [
+    n.userAgent || '',
+    n.platform || '',
+    n.language || '',
+    (n.languages || []).join(','),
+    n.hardwareConcurrency || '',
+    n.maxTouchPoints || '',
+    s.width || '',
+    s.height || '',
+    s.colorDepth || '',
+    window.devicePixelRatio || '',
+    timezone,
+    new Date().getTimezoneOffset(),
+  ];
+  return hashString(parts.join('|'));
+}
+
+let cachedUserId = null;
+
+function getUserId() {
+  if (cachedUserId) return cachedUserId;
+
+  const fingerprint = getDeviceFingerprint();
+  let random = safeStore.get(USER_ID_KEY);
+  if (!random) {
+    random = Math.random().toString(36).slice(2, 8);
+    safeStore.set(USER_ID_KEY, random);
+  }
+
+  cachedUserId = `${fingerprint}-${random}`;
+  return cachedUserId;
 }
 
 /* --- Biệt danh: tự sinh ngẫu nhiên, bấm vào đổi được --- */
@@ -1163,18 +1221,15 @@ function formatNumber(n) {
   return Number(n || 0).toLocaleString('vi-VN');
 }
 
-// Mỗi lần mở trang (mỗi tab) chỉ tính 1 lượt truy cập
-let visitCounted = false;
-
 async function updateActiveLearners() {
   try {
-    const isNewVisit = !visitCounted;
-    visitCounted = true;
-
+    // Việc quyết định "có tính thêm một lượt vào hay không" nằm ở server:
+    // chỉ cộng khi người này đã nghỉ hơn 30 phút. Client không tự tính để
+    // tránh F5 hay mở nhiều tab làm thổi phồng con số.
     const response = await fetch('/api/stats', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: getUserId(), isNewVisit }),
+      body: JSON.stringify({ userId: getUserId() }),
     });
     const data = await response.json();
     if (data && typeof data.activeCount === 'number') {

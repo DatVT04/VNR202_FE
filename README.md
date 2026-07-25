@@ -206,15 +206,42 @@ api/stats.js   Bộ đếm cộng đồng (Redis)
 assets/        Ảnh động của README này
 ```
 
+### Danh tính người học
+
+Không có đăng nhập, nên `userId` được ghép từ hai lớp:
+
+```
+userId = <vân tay thiết bị>-<mã ngẫu nhiên>
+         └─ băm FNV-1a từ:      └─ sinh 1 lần, lưu localStorage
+            user agent, nền tảng,
+            ngôn ngữ, số nhân CPU,
+            độ phân giải, DPR,
+            múi giờ, touch points
+```
+
+Xoá cache hay bật ẩn danh thì phần ngẫu nhiên đổi, **nhưng vân tay giữ nguyên** — server cắt lấy phần vân tay để gom về đúng một người.
+
 ### Ba con số được tính thế nào
 
-| Chỉ số | Công thức |
-|:--|:--|
-| **Đang học** | Mỗi máy ping 5 giây/lần. Server xoá ai im lặng quá 15 giây rồi đếm số còn lại. |
-| **Học hôm nay** | HyperLogLog theo ngày (giờ VN, UTC+7) — đếm số `userId` khác nhau, reset lúc 00:00. |
-| **Lượt vào** | Bộ đếm cộng dồn, `INCR` một lần cho mỗi tab mở mới. |
+| Chỉ số | Đơn vị | Công thức |
+|:--|:--|:--|
+| **Đang học** | phiên trình duyệt | Client ping 5 giây/lần. Server xoá ai im lặng quá 15 giây rồi đếm số còn lại. |
+| **Học hôm nay** | người | HyperLogLog theo ngày (giờ VN, UTC+7), khoá là **vân tay** — reset lúc 00:00. |
+| **Lượt vào** | phiên 30 phút | Server lưu mốc `lastSeen` của từng người. Chỉ `INCR` khi lần ping mới cách lần trước **hơn 30 phút**. |
 
-Danh tính là `userId` ngẫu nhiên trong `localStorage` → cùng máy cùng trình duyệt tính là một người.
+Nhờ đếm theo phiên ở phía server, F5 liên tục hay mở 5 tab cùng lúc cũng chỉ tính đúng **1 lượt**.
+
+### Giới hạn cần biết
+
+| Tình huống | Kết quả | Vì sao |
+|:--|:--|:--|
+| Cùng người, laptop + điện thoại | tính **2** | Hai thiết bị, hai vân tay khác nhau |
+| Cùng người, xoá cache / ẩn danh | tính **1** ✅ | Vân tay không đổi |
+| Cùng người, F5 20 lần | tính **1** ✅ | Chung một phiên 30 phút |
+| Hai người dùng chung một máy, chung trình duyệt | tính **1** | Không phân biệt được nếu thiếu đăng nhập |
+| Hai máy giống hệt nhau (cùng đời máy, cùng cấu hình) | có thể gộp | Vân tay trùng — hiếm nhưng có thể xảy ra |
+
+Muốn chính xác tuyệt đối thì phải có đăng nhập. Với mục đích "biết có bao nhiêu đứa đang cày cùng mình" thì mức này là đủ.
 
 ### Deploy
 
