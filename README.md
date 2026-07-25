@@ -223,9 +223,9 @@ C  ███████████████████                   7
 
 ## 📌 Ghi chú
 
-- Project vốn dựng cho môn **MLN131**, nay đã thay toàn bộ nội dung sang **VNR202**.
-- Tab **Note** đang trống (`notes_data.js = []`). Muốn dùng lại thì điền `window.notesData`
+- Tab **Note** đang trống (`notes_data.js = []`). Muốn dùng thì điền `window.notesData`
   theo cấu trúc `section` → `subsection` → `notes` / `warning`.
+- Toàn bộ nội dung học thuật của repo nằm gọn trong `ques.md`. Không có file tài liệu nào khác.
 
 <div align="center">
 <br>

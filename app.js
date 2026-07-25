@@ -93,7 +93,7 @@ const state = {
   filterStarred: false,
 };
 
-const SESSION_STORAGE_KEY = 'quiznet.study.session.v1';
+const SESSION_STORAGE_KEY = 'vnr202.study.session.v1';
 
 function normalizeNewlines(text) {
   return String(text || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
@@ -1048,7 +1048,7 @@ if (els.fileInput) {
 }
 
 // Active Learners Tracking
-const USER_ID_KEY = 'quiznet.user_id';
+const USER_ID_KEY = 'vnr202.user_id';
 function getUserId() {
   let id = localStorage.getItem(USER_ID_KEY);
   if (!id) {

@@ -1,4 +1,4 @@
-// neko.js - Quiznet Companion Mascot
+// neko.js - VNR202 Companion Mascot
 // Inspired by Oneko / Felix desktop cat
 
 (function () {
@@ -23,7 +23,7 @@
   document.body.appendChild(nekoEl);
 
   let isEnabled = true;
-  localStorage.setItem("quiznet.neko.enabled", "true");
+  localStorage.setItem("vnr202.neko.enabled", "true");
 
   let nekoPosX = window.innerWidth / 2;
   let nekoPosY = window.innerHeight / 2;
@@ -614,7 +614,7 @@
   window.neko = {
     toggle: function (force) {
       isEnabled = force !== undefined ? force : !isEnabled;
-      localStorage.setItem("quiznet.neko.enabled", isEnabled);
+      localStorage.setItem("vnr202.neko.enabled", isEnabled);
       if (isEnabled) {
         nekoEl.style.display = "block";
         resetIdle();
@@ -753,7 +753,7 @@
     setEnabled: function (enabled) {
       if (isEnabled === enabled) return; // No change
       isEnabled = enabled;
-      localStorage.setItem("quiznet.neko.enabled", isEnabled);
+      localStorage.setItem("vnr202.neko.enabled", isEnabled);
       if (isEnabled) {
         nekoEl.style.display = "block";
         resetIdle();

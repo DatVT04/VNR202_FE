@@ -14,7 +14,7 @@ async function getRedisClient() {
   return client;
 }
 
-const NEKO_KEY = 'quiznet_neko_enabled';
+const NEKO_KEY = 'vnr202_neko_enabled';
 
 export default async function handler(req, res) {
   const now = Date.now();

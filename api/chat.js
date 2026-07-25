@@ -16,7 +16,7 @@ async function getRedisClient() {
 export default async function handler(req, res) {
   try {
     const redis = await getRedisClient();
-    const CHAT_KEY = 'quiznet_chat_messages';
+    const CHAT_KEY = 'vnr202_chat_messages';
 
     if (req.method === 'GET') {
       // Get last 200 messages
