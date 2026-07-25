@@ -61,7 +61,23 @@ const els = {
   totalVisits: document.getElementById('totalVisits'),
   nicknameValue: document.getElementById('nicknameValue'),
   nicknameBtn: document.getElementById('nicknameBtn'),
+  // Thanh trên đầu (mobile)
+  mtbActive: document.getElementById('mtbActive'),
+  mtbToday: document.getElementById('mtbToday'),
+  mtbVisits: document.getElementById('mtbVisits'),
+  mtbWrong: document.getElementById('mtbWrong'),
 };
+
+// Cập nhật một ô số: chỉ đổi khi giá trị khác, kèm hiệu ứng nhấp nháy
+function setCounter(el, value) {
+  if (!el) return;
+  const next = String(value);
+  if (el.textContent === next) return;
+  el.textContent = next;
+  el.classList.remove('pulse');
+  void el.offsetWidth; // ép trình duyệt vẽ lại để animation chạy lại
+  el.classList.add('pulse');
+}
 
 const state = {
   questions: [],
@@ -301,6 +317,7 @@ function updateStats() {
   if (els.totalQuestions) els.totalQuestions.textContent = String(state.questions.length);
   if (els.correctCount) els.correctCount.textContent = String(state.correct);
   if (els.wrongCount) els.wrongCount.textContent = String(state.wrong);
+  setCounter(els.mtbWrong, state.wrong);
   if (els.starredCount) els.starredCount.textContent = String(getStarredIndices().length);
   if (els.reviewCount) els.reviewCount.textContent = String(state.reviewQueue.length);
   // hide parse info UI (kept minimal per user request)
@@ -1161,25 +1178,18 @@ async function updateActiveLearners() {
     });
     const data = await response.json();
     if (data && typeof data.activeCount === 'number') {
-      const el = els.activeCount;
-      if (el) {
-        const oldVal = el.textContent;
-        const newVal = String(data.activeCount);
-        if (oldVal !== newVal) {
-          el.textContent = newVal;
-          el.classList.remove('pulse');
-          void el.offsetWidth; // trigger reflow
-          el.classList.add('pulse');
-        }
-      }
+      setCounter(els.activeCount, data.activeCount);
+      setCounter(els.mtbActive, data.activeCount);
     }
 
-    if (data && typeof data.todayLearners === 'number' && els.todayLearners) {
-      els.todayLearners.textContent = formatNumber(data.todayLearners);
+    if (data && typeof data.todayLearners === 'number') {
+      setCounter(els.todayLearners, formatNumber(data.todayLearners));
+      setCounter(els.mtbToday, formatNumber(data.todayLearners));
     }
 
-    if (data && typeof data.totalVisits === 'number' && els.totalVisits) {
-      els.totalVisits.textContent = formatNumber(data.totalVisits);
+    if (data && typeof data.totalVisits === 'number') {
+      setCounter(els.totalVisits, formatNumber(data.totalVisits));
+      setCounter(els.mtbVisits, formatNumber(data.totalVisits));
     }
 
     // Sync neko state from server.
@@ -2150,8 +2160,9 @@ document.addEventListener('keydown', (e) => {
     if (!isSheetMode()) return;
     const btn = e.target.closest('button');
     if (!btn) return;
-    if (btn.id === 'reloadButton') return;
-    if (btn.closest('.chat-container')) return;
+    if (btn.id === 'reloadButton') return;      // mở menu con
+    if (btn.id === 'nicknameBtn') return;       // đổi tên xong còn xem lại
+    if (btn.closest('.chat-container')) return; // còn gõ tin nhắn
     setTimeout(closeSheet, 120);
   });
 

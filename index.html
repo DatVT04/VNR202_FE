@@ -20,6 +20,37 @@
   <div class="backdrop backdrop-a"></div>
   <div class="backdrop backdrop-b"></div>
 
+  <!-- Thanh trên đầu, chỉ hiện trên điện thoại -->
+  <header class="mobile-topbar" id="mobileTopbar">
+    <div class="mobile-topbar-stats">
+      <div class="mtb-stat">
+        <span class="mtb-value" id="mtbActive">1</span>
+        <span class="mtb-label">Đang học</span>
+      </div>
+      <div class="mtb-stat">
+        <span class="mtb-value" id="mtbToday">–</span>
+        <span class="mtb-label">Hôm nay</span>
+      </div>
+      <div class="mtb-stat">
+        <span class="mtb-value" id="mtbVisits">–</span>
+        <span class="mtb-label">Lượt vào</span>
+      </div>
+      <div class="mtb-stat">
+        <span class="mtb-value mtb-wrong" id="mtbWrong">0</span>
+        <span class="mtb-label">Câu sai</span>
+      </div>
+    </div>
+    <button id="mobileMenuBtn" class="mobile-menu-btn" type="button" aria-label="Mở bảng điều khiển"
+      aria-expanded="false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+        stroke-linecap="round">
+        <line x1="4" y1="7" x2="20" y2="7"></line>
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="17" x2="20" y2="17"></line>
+      </svg>
+    </button>
+  </header>
+
   <div class="app-shell">
     <aside class="sidebar">
       <div style="display:grid;gap:12px;align-items:start;">
@@ -177,17 +208,8 @@
     <img class="modal-content" id="modalImg">
   </div>
 
-  <!-- Chỉ hiện trên điện thoại: mở bảng điều khiển (Refresh / Note / Neko / chat...) -->
+  <!-- Lớp mờ phía sau bảng điều khiển trên điện thoại -->
   <div id="mobileMenuOverlay" class="mobile-menu-overlay"></div>
-  <button id="mobileMenuBtn" class="mobile-menu-btn" type="button" aria-label="Mở bảng điều khiển"
-    aria-expanded="false">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-      stroke-linecap="round">
-      <line x1="4" y1="7" x2="20" y2="7"></line>
-      <line x1="4" y1="12" x2="20" y2="12"></line>
-      <line x1="4" y1="17" x2="20" y2="17"></line>
-    </svg>
-  </button>
 
   <script src="notes_data.js"></script>
   <script src="neko.js"></script>
