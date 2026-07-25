@@ -2009,3 +2009,98 @@ a {
     pointer-events: none;
   }
 }
+
+/* ==========================================================================
+   Thống kê cộng đồng: biệt danh + số người học hôm nay + tổng lượt truy cập
+   ========================================================================== */
+
+.community-stats {
+  display: grid;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.nickname-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  background: rgba(5, 150, 105, 0.05);
+  color: var(--text);
+  box-shadow: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.nickname-label {
+  color: var(--muted);
+  font-weight: 400;
+  flex: none;
+}
+
+.nickname-value {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--accent);
+}
+
+.nickname-edit {
+  flex: none;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(5, 150, 105, 0.12);
+  color: var(--accent);
+}
+
+.community-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.community-stat {
+  display: grid;
+  gap: 2px;
+  padding: 0.7rem 0.6rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  text-align: center;
+}
+
+.community-stat-value {
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  transition: transform 0.2s ease;
+}
+
+.community-stat-value.pulse {
+  animation: pulse-update 0.5s ease-out;
+}
+
+.community-stat-label {
+  font-size: 0.7rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .nickname-row {
+    min-height: 44px;
+  }
+
+  .community-stat-value {
+    font-size: 1.15rem;
+  }
+}

@@ -40,6 +40,24 @@
           <p class="wrong-count-line">Câu sai: <strong id="wrongCount">0</strong></p>
           <p class="active-learners-line">Đang học: <strong id="activeCount">1</strong></p>
         </div>
+
+        <div class="community-stats">
+          <button type="button" id="nicknameBtn" class="nickname-row" title="Bấm để đổi biệt danh">
+            <span class="nickname-label">Bạn là</span>
+            <span class="nickname-value" id="nicknameValue">…</span>
+            <span class="nickname-edit">đổi</span>
+          </button>
+          <div class="community-stats-grid">
+            <div class="community-stat">
+              <span class="community-stat-value" id="todayLearners">–</span>
+              <span class="community-stat-label">Học hôm nay</span>
+            </div>
+            <div class="community-stat">
+              <span class="community-stat-value" id="totalVisits">–</span>
+              <span class="community-stat-label">Tổng lượt truy cập</span>
+            </div>
+          </div>
+        </div>
         <div class="starred-filter-wrapper">
           <button type="button" id="starredFilterBtn" class="starred-filter-btn" title="Bật/Tắt chỉ xem câu đã chú ý">
             ★ Câu hỏi đã đánh dấu: <strong id="starredCount">0</strong>

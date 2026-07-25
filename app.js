@@ -57,6 +57,10 @@ const els = {
   questionSearchInput: document.getElementById('questionSearchInput'),
   searchResultsContainer: document.getElementById('searchResultsContainer'),
   questionInteractiveArea: document.getElementById('questionInteractiveArea'),
+  todayLearners: document.getElementById('todayLearners'),
+  totalVisits: document.getElementById('totalVisits'),
+  nicknameValue: document.getElementById('nicknameValue'),
+  nicknameBtn: document.getElementById('nicknameBtn'),
 };
 
 const state = {
@@ -1085,23 +1089,75 @@ if (els.fileInput) {
   });
 }
 
+// localStorage có thể ném lỗi (Safari riêng tư, chặn cookie) -> bọc lại
+const safeStore = {
+  get(key) {
+    try { return localStorage.getItem(key); } catch (e) { return null; }
+  },
+  set(key, value) {
+    try { localStorage.setItem(key, value); } catch (e) { /* bỏ qua */ }
+  },
+};
+
 // Active Learners Tracking
 const USER_ID_KEY = 'vnr202.user_id';
 function getUserId() {
-  let id = localStorage.getItem(USER_ID_KEY);
+  let id = safeStore.get(USER_ID_KEY);
   if (!id) {
     id = 'user_' + Math.random().toString(36).substr(2, 9);
-    localStorage.setItem(USER_ID_KEY, id);
+    safeStore.set(USER_ID_KEY, id);
   }
   return id;
 }
 
+/* --- Biệt danh: tự sinh ngẫu nhiên, bấm vào đổi được --- */
+const NICKNAME_KEY = 'vnr202.nickname';
+const NICK_ADJ = ['Mèo Lười', 'Cú Đêm', 'Sen Chăm', 'Học Sĩ', 'Cao Thủ', 'Tân Binh',
+  'Thợ Cày', 'Sĩ Tử', 'Bí Ẩn', 'Chiến Thần', 'Gà Con', 'Đại Bàng'];
+
+function generateNickname() {
+  const adj = NICK_ADJ[Math.floor(Math.random() * NICK_ADJ.length)];
+  return `${adj} ${Math.floor(Math.random() * 90) + 10}`;
+}
+
+function getNickname() {
+  let name = safeStore.get(NICKNAME_KEY);
+  if (!name) {
+    name = generateNickname();
+    safeStore.set(NICKNAME_KEY, name);
+  }
+  return name;
+}
+
+function setNickname(name) {
+  const clean = String(name || '').trim().slice(0, 24);
+  if (!clean) return getNickname();
+  safeStore.set(NICKNAME_KEY, clean);
+  renderNickname();
+  return clean;
+}
+
+function renderNickname() {
+  if (els.nicknameValue) els.nicknameValue.textContent = getNickname();
+}
+
+// Định dạng số cho dễ đọc: 12345 -> 12.345
+function formatNumber(n) {
+  return Number(n || 0).toLocaleString('vi-VN');
+}
+
+// Mỗi lần mở trang (mỗi tab) chỉ tính 1 lượt truy cập
+let visitCounted = false;
+
 async function updateActiveLearners() {
   try {
+    const isNewVisit = !visitCounted;
+    visitCounted = true;
+
     const response = await fetch('/api/stats', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId: getUserId() }),
+      body: JSON.stringify({ userId: getUserId(), isNewVisit }),
     });
     const data = await response.json();
     if (data && typeof data.activeCount === 'number') {
@@ -1116,6 +1172,14 @@ async function updateActiveLearners() {
           el.classList.add('pulse');
         }
       }
+    }
+
+    if (data && typeof data.todayLearners === 'number' && els.todayLearners) {
+      els.todayLearners.textContent = formatNumber(data.todayLearners);
+    }
+
+    if (data && typeof data.totalVisits === 'number' && els.totalVisits) {
+      els.totalVisits.textContent = formatNumber(data.totalVisits);
     }
 
     // Sync neko state from server.
@@ -1267,7 +1331,7 @@ async function sendChatMessage(text, image = null) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         userId: getUserId(),
-        userName: 'Học viên ' + getUserId().slice(-4).toUpperCase(),
+        userName: getNickname(),
         text: text,
         image: image
       })
@@ -2094,5 +2158,26 @@ document.addEventListener('keydown', (e) => {
   // Quay về desktop / xoay ngang thì trả trạng thái về bình thường
   window.addEventListener('resize', () => {
     if (!isSheetMode()) closeSheet();
+  });
+})();
+
+/* ==========================================================================
+   Biệt danh: hiện tên và cho đổi bằng một cú bấm
+   ========================================================================== */
+(function initNickname() {
+  renderNickname();
+  if (!els.nicknameBtn) return;
+
+  els.nicknameBtn.addEventListener('click', () => {
+    const current = getNickname();
+    const input = window.prompt('Đổi biệt danh của bạn:', current);
+    if (input === null) return; // bấm Huỷ
+    const trimmed = String(input).trim();
+    if (!trimmed) {
+      // Bỏ trống thì bốc lại một cái ngẫu nhiên
+      setNickname(generateNickname());
+      return;
+    }
+    setNickname(trimmed);
   });
 })();
