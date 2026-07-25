@@ -37,11 +37,11 @@ const SIM = {
      - broad: làn sóng ôn thi kéo dài vài tuần, lên từ từ
      - spike: cơn nước rút dồn vào mấy ngày cuối
      Cộng hai cái lại thì đường cong giống thực tế hơn một hàm mũ đơn. */
-  baseline: 4,
-  broad: 35,
-  broadDays: 8,
-  spike: 110,
-  spikeDays: 1.8,
+  baseline: 12,     // mức đáy, lúc còn xa ngày thi
+  broad: 105,       // biên độ làn sóng vài tuần
+  broadDays: 8,     // làn sóng này "rộng" bao nhiêu ngày
+  spike: 330,       // biên độ cơn nước rút cuối
+  spikeDays: 1.8,   // cơn nước rút dồn trong bao nhiêu ngày
 
   turnover: 9,             // 1 người "đang học" ứng với bao nhiêu lượt trong ngày
   sessionsPerPerson: 1.4,
@@ -187,8 +187,13 @@ function simTodayLearners(now) {
     peakLevel = Math.max(peakLevel, simBaseLevel(0));
   }
 
+  /* Luỹ thừa 0.8 kéo phần đầu ngày lên một chút. Nếu để nguyên tuyến tính thì
+     từ 0h–3h phần cộng dồn quá nhỏ, bị cái sàn bên dưới che mất, và con số
+     đứng chết một chỗ hàng tiếng — nhìn là biết máy sinh ra.
+     Cuối ngày vẫn về đúng 1 nên tổng cả ngày không đổi. */
   const dayVariation = 0.9 + 0.2 * simHash01(simVnDayIndex(now));
-  const accumulated = Math.round(dayLevel * SIM.turnover * dayVariation * simCircadianCumulative(hour));
+  const progress = Math.pow(simCircadianCumulative(hour), 0.8);
+  const accumulated = Math.round(dayLevel * SIM.turnover * dayVariation * progress);
 
   /* Sàn: rạng sáng thì phần cộng dồn còn rất nhỏ, trong khi vẫn có người đang
      online. Lấy mức cao nhất đã đạt trong ngày (có tính cả hệ số nước rút)

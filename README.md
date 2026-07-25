@@ -268,7 +268,7 @@ Khi `simulatedStats: true`, ba con số là **hàm thuần theo đồng hồ** �
 
 | Thành phần | Vai trò |
 |:--|:--|
-| **Mức nền** | `4 + 35·e^(-ngày/8) + 110·e^(-ngày/1.8)` — một làn sóng chậm kéo dài vài tuần cộng một cơn nước rút mấy ngày cuối |
+| **Mức nền** | `12 + 105·e^(-ngày/8) + 330·e^(-ngày/1.8)` — một làn sóng chậm kéo dài vài tuần cộng một cơn nước rút mấy ngày cuối |
 | **Nhịp sinh hoạt** | Bảng 24 giờ: vắng nhất 4h sáng, đông nhất 21h |
 | **Nước rút** | Càng sát ngày thi, đường cong đêm càng phẳng — vì ai cũng cày đêm |
 | **Nhiễu** | Value noise chu kỳ 7 phút, biên độ ±15% → số trôi dần chứ không nhảy |
