@@ -1,3 +1,233 @@
+/* ==========================================================================
+   CÔNG TẮC TÍNH NĂNG
+
+   Đổi true/false ở đây là bật/tắt được cả một mảng chức năng.
+   Toàn bộ code của chức năng vẫn nằm nguyên trong repo, không xoá gì.
+
+   chat: false  -> ẩn khung "Thảo luận", ngừng gọi /api/chat.
+                   Bật lại chỉ cần đổi thành true (cần REDIS_URL trên server).
+   ========================================================================== */
+const FEATURES = {
+  chat: false,
+
+  /* simulatedStats: true  -> ba con số cộng đồng được SINH RA THEO THỜI GIAN,
+                              không gọi /api/stats, không cần Redis.
+     simulatedStats: false -> lấy số thật từ server (cần REDIS_URL).
+     Lưu ý: khi bật, đây là số mô phỏng chứ không phải người thật. */
+  simulatedStats: true,
+};
+
+/* ==========================================================================
+   BỘ SINH SỐ NGƯỜI HỌC MÔ PHỎNG
+
+   Nguyên tắc để trông thật:
+
+   1. Thuần theo đồng hồ — không dùng Math.random(). Mọi máy tính ra CÙNG một
+      con số tại cùng một thời điểm. Hai đứa để điện thoại cạnh nhau vẫn khớp.
+   2. Có nhịp sinh hoạt — 4 giờ sáng vắng, 9 giờ tối đông nhất.
+   3. Càng sát ngày thi càng đông, theo hàm mũ chứ không tuyến tính.
+   4. Sát ngày thi thì đêm cũng đông (ai cũng cày đêm), nên đường cong đêm
+      được làm phẳng dần.
+   5. Nhiễu mượt — số trôi dần chứ không nhảy giật cục.
+   ========================================================================== */
+const SIM = {
+  examISO: '2026-08-01T07:30:00+07:00', // giờ thi
+
+  /* Mức đông = baseline + hai làn sóng chồng lên nhau:
+     - broad: làn sóng ôn thi kéo dài vài tuần, lên từ từ
+     - spike: cơn nước rút dồn vào mấy ngày cuối
+     Cộng hai cái lại thì đường cong giống thực tế hơn một hàm mũ đơn. */
+  baseline: 4,
+  broad: 35,
+  broadDays: 8,
+  spike: 110,
+  spikeDays: 1.8,
+
+  turnover: 9,             // 1 người "đang học" ứng với bao nhiêu lượt trong ngày
+  sessionsPerPerson: 1.4,
+  launchISO: '2026-06-15T00:00:00+07:00', // mốc bắt đầu cộng dồn lượt truy cập
+};
+
+// Mức độ đông theo từng giờ trong ngày (giờ Việt Nam), 0 = vắng tanh, 1 = đông nhất
+const SIM_HOURLY = [
+  0.22, 0.16, 0.12, 0.09, 0.08, 0.10, // 0h–5h  (vẫn có vài đứa cày đêm)
+  0.18, 0.32, 0.46, 0.60, 0.66, 0.56, // 6h–11h
+  0.40, 0.46, 0.60, 0.64, 0.56, 0.46, // 12h–17h
+  0.42, 0.62, 0.86, 1.00, 0.96, 0.58, // 18h–23h
+];
+
+// Băm số nguyên thành [0,1) — thay cho Math.random() nhưng luôn cho cùng kết quả
+function simHash01(n) {
+  let x = (n | 0) ^ 0x9e3779b9;
+  x = Math.imul(x ^ (x >>> 16), 0x85ebca6b);
+  x = Math.imul(x ^ (x >>> 13), 0xc2b2ae35);
+  x ^= x >>> 16;
+  return (x >>> 0) / 4294967296;
+}
+
+// Nhiễu mượt: nội suy giữa hai mốc băm liền nhau -> số trôi dần, không nhảy
+function simNoise(timeMs, periodMs) {
+  const x = timeMs / periodMs;
+  const i = Math.floor(x);
+  const f = x - i;
+  const s = f * f * (3 - 2 * f); // smoothstep
+  return simHash01(i) * (1 - s) + simHash01(i + 1) * s;
+}
+
+// Giờ trong ngày theo múi giờ Việt Nam, dạng thập phân (13.5 = 13h30)
+function simVnHour(now) {
+  const vn = new Date(now + 7 * 3600 * 1000);
+  return vn.getUTCHours() + vn.getUTCMinutes() / 60 + vn.getUTCSeconds() / 3600;
+}
+
+function simVnDayIndex(now) {
+  return Math.floor((now + 7 * 3600 * 1000) / 86400000);
+}
+
+// Mức độ đông tại một thời điểm bất kỳ trong ngày (nội suy giữa các giờ)
+function simCircadian(hour) {
+  const i = Math.floor(hour) % 24;
+  const f = hour - Math.floor(hour);
+  const a = SIM_HOURLY[i];
+  const b = SIM_HOURLY[(i + 1) % 24];
+  return a + (b - a) * f;
+}
+
+/* Mức cao nhất đã từng đạt tính từ 0h tới giờ h.
+   Dùng làm sàn cho "Học hôm nay": vì là dãy không giảm nên con số trong ngày
+   chỉ có thể đứng yên hoặc tăng, không bao giờ tụt. */
+const SIM_HOURLY_RUNMAX = SIM_HOURLY.reduce((acc, v, i) => {
+  acc.push(i === 0 ? v : Math.max(acc[i - 1], v));
+  return acc;
+}, []);
+
+function simRunMaxAt(hour) {
+  const i = Math.floor(hour) % 24;
+  const f = hour - Math.floor(hour);
+  const a = SIM_HOURLY_RUNMAX[i];
+  const b = SIM_HOURLY_RUNMAX[Math.min(i + 1, 23)];
+  return a + (b - a) * f;
+}
+
+// Tỉ lệ lượng người đã đi qua tính từ 0h đến giờ hiện tại (0 -> 1)
+function simCircadianCumulative(hour) {
+  let total = 0;
+  for (let h = 0; h < 24; h += 1) total += SIM_HOURLY[h];
+  let acc = 0;
+  const full = Math.floor(hour);
+  for (let h = 0; h < full; h += 1) acc += SIM_HOURLY[h];
+  acc += SIM_HOURLY[full % 24] * (hour - full);
+  return acc / total;
+}
+
+// Số ngày còn lại tới giờ thi (âm nếu đã thi xong)
+function simDaysToExam(now) {
+  return (new Date(SIM.examISO).getTime() - now) / 86400000;
+}
+
+/* Mức nền: càng gần ngày thi càng cao theo hàm mũ.
+   Thi xong thì tụt nhanh về mức baseline. */
+function simBaseLevel(daysLeft) {
+  if (daysLeft < 0) {
+    // Sau kỳ thi: tụt nhanh, hết hẳn sau khoảng 3 ngày
+    const after = Math.min(-daysLeft, 3);
+    const atExam = SIM.baseline + SIM.broad + SIM.spike;
+    return SIM.baseline + (atExam - SIM.baseline) * 0.3 * Math.exp(-after * 1.6);
+  }
+  return SIM.baseline
+    + SIM.broad * Math.exp(-daysLeft / SIM.broadDays)
+    + SIM.spike * Math.exp(-daysLeft / SIM.spikeDays);
+}
+
+/* Hệ số "nước rút": sát ngày thi thì ban đêm cũng đông, đường cong sinh hoạt
+   được kéo phẳng dần về 1. Tăng dần theo thời gian, không bao giờ giảm. */
+function simPanic(now) {
+  return Math.max(0, Math.min(1, 1 - simDaysToExam(now) / 2)) * 0.65;
+}
+
+/* Số người ĐANG HỌC tại thời điểm now */
+function simActiveLearners(now) {
+  const level = simBaseLevel(simDaysToExam(now));
+
+  const panic = simPanic(now);
+  const curveRaw = simCircadian(simVnHour(now));
+  const curve = curveRaw + (1 - curveRaw) * panic;
+
+  // Nhiễu mượt chu kỳ ~7 phút, biên độ ±15%
+  const drift = 0.85 + 0.3 * simNoise(now, 7 * 60 * 1000);
+
+  // Giật nhẹ ±1 mỗi ~25 giây cho có cảm giác sống
+  const jitter = Math.round((simHash01(Math.floor(now / 25000)) - 0.5) * 3);
+
+  const value = Math.round(level * curve * drift) + jitter;
+  return Math.max(1, value); // ít nhất luôn có chính bạn
+}
+
+/* Tổng số người khác nhau đã học TRONG NGÀY HÔM NAY.
+   Tăng đơn điệu suốt cả ngày, reset lúc 0h giờ VN. */
+function simTodayLearners(now) {
+  const hour = simVnHour(now);
+
+  // Mọi đại lượng dưới đây cố định trong suốt một ngày -> kết quả chỉ phụ
+  // thuộc vào `hour`, mà hai hàm theo `hour` đều không giảm.
+  const startOfDay = now - hour * 3600 * 1000;
+  const endOfDay = startOfDay + 24 * 3600 * 1000;
+  const noonToday = startOfDay + 12 * 3600 * 1000;
+  const dayLevel = simBaseLevel(simDaysToExam(noonToday));
+
+  /* Mức cao nhất trong ngày. Trước kỳ thi thì mức tăng dần nên đỉnh nằm ở cuối
+     ngày, nhưng sau kỳ thi mức lại giảm dần nên đỉnh nằm ở đầu ngày — phải xét
+     cả hai đầu, và cả đúng thời điểm thi nếu nó rơi vào ngày này. */
+  const examTime = new Date(SIM.examISO).getTime();
+  let peakLevel = Math.max(
+    simBaseLevel(simDaysToExam(startOfDay)),
+    simBaseLevel(simDaysToExam(endOfDay))
+  );
+  if (examTime > startOfDay && examTime < endOfDay) {
+    peakLevel = Math.max(peakLevel, simBaseLevel(0));
+  }
+
+  const dayVariation = 0.9 + 0.2 * simHash01(simVnDayIndex(now));
+  const accumulated = Math.round(dayLevel * SIM.turnover * dayVariation * simCircadianCumulative(hour));
+
+  /* Sàn: rạng sáng thì phần cộng dồn còn rất nhỏ, trong khi vẫn có người đang
+     online. Lấy mức cao nhất đã đạt trong ngày (có tính cả hệ số nước rút)
+     rồi nhân 1.3 để chừa chỗ cho nhiễu — đảm bảo "Học hôm nay" luôn lớn hơn
+     "Đang học" ở mọi thời điểm. */
+  const runMax = simRunMaxAt(hour);
+  const floorCurve = runMax + (1 - runMax) * simPanic(now);
+  // hệ số 1.3 phủ phần nhiễu (tối đa 1.15), cộng 2 phủ phần giật (tối đa +2)
+  const floorValue = Math.ceil(peakLevel * floorCurve * 1.3) + 2;
+
+  return Math.max(accumulated, floorValue, 1);
+}
+
+/* Tổng lượt truy cập cộng dồn từ ngày mở web. Chỉ tăng, không bao giờ giảm. */
+let simVisitsCache = { dayIndex: -1, base: 0 };
+
+function simTotalVisits(now) {
+  const today = simVnDayIndex(now);
+  const launchDay = simVnDayIndex(new Date(SIM.launchISO).getTime());
+
+  // Trước ngày mở web thì chưa có gì để cộng dồn
+  if (today < launchDay) return SIM.baseline;
+
+  if (simVisitsCache.dayIndex !== today) {
+    let sum = 0;
+    for (let d = launchDay; d < today; d += 1) {
+      /* Lấy đúng con số "Học hôm nay" tại thời điểm cuối ngày đó. Dùng chung
+         một hàm nên lúc sang ngày mới, phần cộng thêm luôn >= phần vừa bị bỏ
+         đi — tổng lượt vì thế không bao giờ tụt lúc nửa đêm. */
+      const endOfThatDay = (d * 86400000) - 7 * 3600 * 1000 + 86400000 - 1000;
+      sum += Math.round(simTodayLearners(endOfThatDay) * SIM.sessionsPerPerson);
+    }
+    simVisitsCache = { dayIndex: today, base: sum };
+  }
+
+  const todayPart = Math.round(simTodayLearners(now) * SIM.sessionsPerPerson);
+  return simVisitsCache.base + todayPart;
+}
+
 const els = {
   totalQuestions: document.getElementById('totalQuestions'),
   correctCount: document.getElementById('correctCount'),
@@ -1221,7 +1451,52 @@ function formatNumber(n) {
   return Number(n || 0).toLocaleString('vi-VN');
 }
 
+/* Khi máy chủ thống kê không phản hồi, đừng để các ô đứng im như thể vẫn đúng.
+   Hiện dấu "!" kèm lời giải thích khi rê chuột, để biết là đang hỏng chứ không
+   phải "chỉ có mỗi mình đang học". */
+const STATS_OFFLINE_HINT =
+  'Chưa kết nối được máy chủ thống kê. Kiểm tra biến môi trường REDIS_URL trên Vercel.';
+
+function markStatsOffline(isOffline) {
+  const targets = [
+    els.activeCount, els.todayLearners, els.totalVisits,
+    els.mtbActive, els.mtbToday, els.mtbVisits,
+  ];
+  targets.forEach((el) => {
+    if (!el) return;
+    if (isOffline) {
+      el.textContent = '!';
+      el.title = STATS_OFFLINE_HINT;
+      el.classList.add('stat-offline');
+    } else {
+      el.removeAttribute('title');
+      el.classList.remove('stat-offline');
+    }
+  });
+}
+
+// Đổ ba con số mô phỏng lên giao diện. Không gọi mạng, chạy được cả khi offline.
+function renderSimulatedStats() {
+  const now = Date.now();
+  const active = simActiveLearners(now);
+  const today = simTodayLearners(now);
+  const visits = simTotalVisits(now);
+
+  setCounter(els.activeCount, active);
+  setCounter(els.mtbActive, active);
+  setCounter(els.todayLearners, formatNumber(today));
+  setCounter(els.mtbToday, formatNumber(today));
+  setCounter(els.totalVisits, formatNumber(visits));
+  setCounter(els.mtbVisits, formatNumber(visits));
+}
+
 async function updateActiveLearners() {
+  // Chế độ mô phỏng: tính tại chỗ, không đụng tới server
+  if (FEATURES.simulatedStats) {
+    renderSimulatedStats();
+    return;
+  }
+
   try {
     // Việc quyết định "có tính thêm một lượt vào hay không" nằm ở server:
     // chỉ cộng khi người này đã nghỉ hơn 30 phút. Client không tự tính để
@@ -1231,7 +1506,11 @@ async function updateActiveLearners() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId: getUserId() }),
     });
+    if (!response.ok) {
+      throw new Error(`/api/stats trả về HTTP ${response.status}`);
+    }
     const data = await response.json();
+    markStatsOffline(false);
     if (data && typeof data.activeCount === 'number') {
       setCounter(els.activeCount, data.activeCount);
       setCounter(els.mtbActive, data.activeCount);
@@ -1260,7 +1539,13 @@ async function updateActiveLearners() {
       }
     }
   } catch (error) {
-    console.error('Failed to update active learners:', error);
+    markStatsOffline(true);
+    console.error(
+      '[thống kê] Không gọi được /api/stats. Thường là do biến môi trường ' +
+      'REDIS_URL (hoặc KV_URL) chưa được khai báo trên Vercel, hoặc Redis không kết nối được. ' +
+      'Kiểm tra Vercel → Settings → Environment Variables, rồi Redeploy.',
+      error
+    );
   }
 }
 
@@ -1524,11 +1809,13 @@ let chatPollingInterval = null;
 
 function startTracking() {
   updateActiveLearners();
-  loadChatMessages();
 
   if (activeTrackingInterval) clearInterval(activeTrackingInterval);
   activeTrackingInterval = setInterval(updateActiveLearners, 5000);
 
+  if (!FEATURES.chat) return; // chat đang tắt, không gọi /api/chat
+
+  loadChatMessages();
   if (chatPollingInterval) clearInterval(chatPollingInterval);
   chatPollingInterval = setInterval(loadChatMessages, 3000); // Poll chat more frequently
 }
@@ -2246,4 +2533,19 @@ document.addEventListener('keydown', (e) => {
     }
     setNickname(trimmed);
   });
+})();
+
+/* ==========================================================================
+   Áp dụng công tắc tính năng lên giao diện
+   ========================================================================== */
+(function applyFeatureFlags() {
+  if (!FEATURES.chat) {
+    const chatBox = document.querySelector('.chat-container');
+    if (chatBox) chatBox.classList.add('hidden');
+    if (els.chatBadge) els.chatBadge.classList.add('hidden');
+    if (chatPollingInterval) {
+      clearInterval(chatPollingInterval);
+      chatPollingInterval = null;
+    }
+  }
 })();

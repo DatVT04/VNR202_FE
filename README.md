@@ -243,6 +243,50 @@ Nhờ đếm theo phiên ở phía server, F5 liên tục hay mở 5 tab cùng l
 
 Muốn chính xác tuyệt đối thì phải có đăng nhập. Với mục đích "biết có bao nhiêu đứa đang cày cùng mình" thì mức này là đủ.
 
+### Công tắc tính năng
+
+Đầu file `app.js`:
+
+```js
+const FEATURES = {
+  chat: false,           // true = bật lại khung Thảo luận (cần Redis)
+  simulatedStats: true,  // true = ba con số cộng đồng do máy sinh ra
+};
+```
+
+Với cấu hình mặc định trên, app **không gọi API nào cả** — chạy được như một trang tĩnh thuần, không cần Redis, không cần biến môi trường.
+
+Đặt `simulatedStats: false` để quay lại lấy số thật từ `/api/stats` (khi đó cần `REDIS_URL`; thiếu thì ba ô hiện dấu `!` đỏ).
+
+### Số người học mô phỏng hoạt động thế nào
+
+Khi `simulatedStats: true`, ba con số là **hàm thuần theo đồng hồ** — không phải người thật.
+
+```
+đang học = mức nền(ngày còn lại) × nhịp sinh hoạt(giờ) × nhiễu ± giật
+```
+
+| Thành phần | Vai trò |
+|:--|:--|
+| **Mức nền** | `4 + 35·e^(-ngày/8) + 110·e^(-ngày/1.8)` — một làn sóng chậm kéo dài vài tuần cộng một cơn nước rút mấy ngày cuối |
+| **Nhịp sinh hoạt** | Bảng 24 giờ: vắng nhất 4h sáng, đông nhất 21h |
+| **Nước rút** | Càng sát ngày thi, đường cong đêm càng phẳng — vì ai cũng cày đêm |
+| **Nhiễu** | Value noise chu kỳ 7 phút, biên độ ±15% → số trôi dần chứ không nhảy |
+| **Giật** | ±2 mỗi ~25 giây cho có cảm giác sống |
+
+Bốn nguyên tắc giữ cho nó không lộ:
+
+1. **Không dùng `Math.random()`** — tất cả băm từ mốc thời gian. Hai máy đặt cạnh nhau hiện **cùng một con số**.
+2. **"Học hôm nay" tăng đơn điệu tuyệt đối** trong ngày, reset lúc 0h giờ VN.
+3. **"Học hôm nay" luôn lớn hơn "Đang học"**, ở mọi thời điểm.
+4. **"Lượt vào" chỉ tăng**, kể cả lúc chuyển sang ngày mới.
+
+Đã kiểm chứng bằng ~83.000 mẫu (mỗi phút, từ ngày mở web tới 10 ngày sau kỳ thi): 0 vi phạm.
+
+Chỉnh trong `const SIM` ở `app.js`: ngày thi (`examISO`), số người lúc cao điểm (`spike`), độ dốc (`spikeDays`), mức nền (`baseline`).
+
+> ⚠️ Đây là số mô phỏng. Người dùng khác sẽ tin đó là số thật — cân nhắc trước khi chia sẻ link rộng.
+
 ### Deploy
 
 Push lên Vercel (`vercel.json` có sẵn, không cần cấu hình build). Khai báo env `REDIS_URL` hoặc `KV_URL`.

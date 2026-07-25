@@ -2174,3 +2174,9 @@ a {
     font-size: 1.15rem;
   }
 }
+
+/* Bộ đếm khi mất kết nối máy chủ thống kê */
+.stat-offline {
+  color: var(--danger) !important;
+  cursor: help;
+}
