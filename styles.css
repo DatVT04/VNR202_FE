@@ -1572,3 +1572,331 @@ button.secondary.active {
 
 
 
+
+/* ==========================================================================
+   MOBILE OPTIMIZATION
+   Gộp toàn bộ tinh chỉnh cho điện thoại / máy tính bảng ở đây.
+   ========================================================================== */
+
+/* --- Chung: chống tràn ngang, bỏ highlight xanh khi chạm --- */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  overscroll-behavior-y: contain;
+}
+
+button,
+.option-button,
+.option-check,
+.pill,
+.progress-text,
+a {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* --- Tablet & mobile: 1 cột, câu hỏi lên trước sidebar --- */
+@media (max-width: 1080px) {
+  .app-shell {
+    min-height: 100dvh;
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+
+  /* Ưu tiên nội dung học: khu vực câu hỏi hiển thị trước, sidebar xuống dưới */
+  .stage {
+    order: 0;
+  }
+
+  .sidebar {
+    order: 1;
+  }
+
+  /* Khối trang trí của hero chỉ tổ chiếm chỗ trên màn nhỏ */
+  .hero-card::after {
+    display: none;
+  }
+}
+
+/* --- Điện thoại --- */
+@media (max-width: 768px) {
+
+  /* Bố cục gọn lại, tận dụng tối đa chiều ngang */
+  .app-shell {
+    padding: 12px;
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+    gap: 12px;
+  }
+
+  .sidebar,
+  .hero-card,
+  .question-card,
+  .empty-state {
+    border-radius: 20px;
+    padding: 16px;
+  }
+
+  .question-card {
+    gap: 14px;
+  }
+
+  /* Chữ đề bài dễ đọc, không quá to chiếm màn hình */
+  .prompt {
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  /* --- Vùng chạm: mọi nút tối thiểu 44px theo chuẩn accessibility --- */
+  button,
+  .file-button {
+    min-height: 44px;
+    padding: 0.7rem 0.9rem;
+    border-radius: 12px;
+  }
+
+  /* Bỏ hiệu ứng nhấc lên khi hover (mobile không có hover, gây giật) */
+  button:hover,
+  .file-button:hover {
+    transform: none;
+  }
+
+  .option-button,
+  .option-check {
+    min-height: 48px;
+    padding: 12px;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .option-button:hover,
+  .option-check:hover {
+    box-shadow: none;
+    border-color: var(--border);
+  }
+
+  .option-key {
+    min-width: 1.9rem;
+    min-height: 1.9rem;
+    padding: 2px 6px;
+  }
+
+  .option-check input {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0;
+  }
+
+  .option-list {
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  /* --- Thanh điều hướng dính đáy: không phải cuộn xuống cuối mỗi câu ---
+     Xếp lại thứ tự để nav-row luôn nằm cuối, phần "feedback" (đúng/sai)
+     hiện ngay dưới đáp án chứ không bị thanh này che. */
+  .question-interactive-area {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .question-interactive-area .prompt {
+    order: 1;
+  }
+
+  .question-interactive-area .option-list {
+    order: 2;
+  }
+
+  .question-interactive-area .submit-row {
+    order: 3;
+  }
+
+  .question-interactive-area .feedback {
+    order: 4;
+  }
+
+  .question-interactive-area .nav-row {
+    order: 5;
+  }
+
+  .nav-row {
+    position: sticky;
+    bottom: 0;
+    z-index: 30;
+    margin: 10px -16px -16px;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: var(--panel);
+    border-top: 1px solid var(--border);
+    border-radius: 0 0 20px 20px;
+  }
+
+  .nav-row button {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .submit-row {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  /* --- Thanh trên cùng của câu hỏi: cho xuống dòng thay vì bóp méo --- */
+  .question-topbar {
+    flex-wrap: wrap;
+    gap: 8px;
+    row-gap: 10px;
+  }
+
+  .question-topbar>div {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .question-topbar button {
+    min-height: 38px;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .pill {
+    font-size: 0.72rem;
+  }
+
+  /* --- Input: 16px để iOS/Safari không tự phóng to khi focus --- */
+  input,
+  textarea,
+  select,
+  .chat-input-row input,
+  .note-search-input,
+  .question-search-input {
+    font-size: 16px;
+  }
+
+  /* --- Dropdown & kết quả tìm kiếm: không tràn ra khỏi màn hình --- */
+  .progress-dropdown,
+  .refresh-dropdown {
+    max-width: calc(100vw - 40px);
+    max-height: 60vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .search-results-container {
+    max-height: 55vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* --- Sidebar: 4 nút chia 2 hàng cho đỡ chật --- */
+  .sidebar-actions.quad {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .sidebar-actions.quad button {
+    font-size: 0.85rem;
+  }
+
+  .starred-filter-btn {
+    min-height: 44px;
+  }
+
+  /* --- Chat: thấp hơn để không nuốt màn hình --- */
+  .chat-container {
+    height: 260px;
+  }
+
+  .chat-messages {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .chat-input-row button#chatSendBtn {
+    height: 40px;
+    min-height: 40px;
+  }
+
+  .emoji-picker {
+    max-width: calc(100vw - 48px);
+  }
+
+  /* --- Ảnh & modal --- */
+  .modal-content {
+    max-width: 94vw;
+    max-height: 82vh;
+  }
+
+  .chat-msg .image img {
+    max-height: 200px;
+  }
+
+  /* --- Tab Note: bảng dài cho cuộn ngang thay vì vỡ layout --- */
+  .note-content-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .note-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* Nền trang trí gây tốn hiệu năng scroll trên máy yếu */
+  .backdrop {
+    display: none;
+  }
+}
+
+/* --- Màn hình rất hẹp (iPhone SE, ~360px) --- */
+@media (max-width: 400px) {
+  .sidebar-actions.quad {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .prompt {
+    font-size: 1rem;
+  }
+
+  .nav-row button,
+  .submit-row button {
+    font-size: 0.9rem;
+    padding: 0.65rem 0.5rem;
+  }
+}
+
+/* --- Xoay ngang màn hình thấp: thu chat lại --- */
+@media (max-height: 480px) and (orientation: landscape) {
+  .chat-container {
+    height: 200px;
+  }
+
+  .nav-row {
+    position: static;
+    backdrop-filter: none;
+  }
+}
+
+/* --- Thiết bị cảm ứng: tắt hiệu ứng hover thừa --- */
+@media (hover: none) {
+  .recall-btn:hover {
+    transform: none !important;
+  }
+}
+
+/* --- Tôn trọng cài đặt giảm chuyển động của hệ thống --- */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

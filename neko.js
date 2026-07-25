@@ -22,8 +22,17 @@
   nekoEl.style.display = "none";
   document.body.appendChild(nekoEl);
 
-  let isEnabled = true;
-  localStorage.setItem("vnr202.neko.enabled", "true");
+  // Trên thiết bị cảm ứng, Neko chạy theo con trỏ chuột nên gần như vô dụng
+  // và còn tốn pin -> mặc định TẮT. Người dùng vẫn bật tay được bằng nút "Neko",
+  // và lựa chọn đó được nhớ lại cho các lần sau.
+  const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
+  const storedNekoPref = localStorage.getItem("vnr202.neko.enabled");
+
+  let isEnabled = storedNekoPref !== null
+    ? storedNekoPref === "true"
+    : !isTouchDevice;
+
+  localStorage.setItem("vnr202.neko.enabled", String(isEnabled));
 
   let nekoPosX = window.innerWidth / 2;
   let nekoPosY = window.innerHeight / 2;

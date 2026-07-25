@@ -95,6 +95,11 @@ const state = {
 
 const SESSION_STORAGE_KEY = 'vnr202.study.session.v1';
 
+// Điện thoại / máy tính bảng cảm ứng
+const IS_TOUCH_DEVICE = typeof window !== 'undefined'
+  && typeof window.matchMedia === 'function'
+  && window.matchMedia('(pointer: coarse)').matches;
+
 function normalizeNewlines(text) {
   return String(text || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
 }
@@ -575,7 +580,23 @@ function renderQuestion(pushHistory = true) {
   if (els.prevButton) els.prevButton.disabled = state.historyPos <= 0;
   if (els.nextButton) els.nextButton.disabled = true; // enabled after answering
   updateAutoNextButton();
+  scrollQuestionIntoView();
   saveSession();
+}
+
+// Trên điện thoại, sau khi bấm "Tiếp theo" trang vẫn đang cuộn ở giữa/cuối câu cũ.
+// Đưa đề bài của câu mới về đầu màn hình cho khỏi phải vuốt lên thủ công.
+function scrollQuestionIntoView() {
+  if (!IS_TOUCH_DEVICE || !els.questionCard || els.questionCard.classList.contains('hidden')) {
+    return;
+  }
+  requestAnimationFrame(() => {
+    const top = els.questionCard.getBoundingClientRect().top + window.scrollY - 8;
+    window.scrollTo({
+      top: Math.max(0, top),
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    });
+  });
 }
 
 function renderPrompt(prompt, answerText) {
@@ -1080,8 +1101,9 @@ async function updateActiveLearners() {
       }
     }
 
-    // Sync neko state from server
-    if (data && typeof data.nekoEnabled === 'boolean' && window.neko) {
+    // Sync neko state from server.
+    // Bỏ qua trên thiết bị cảm ứng: máy khác bật Neko không nên tự bật trên điện thoại.
+    if (!IS_TOUCH_DEVICE && data && typeof data.nekoEnabled === 'boolean' && window.neko) {
       const serverEnabled = data.nekoEnabled;
       const localEnabled = window.neko.isEnabled();
       if (serverEnabled !== localEnabled) {
