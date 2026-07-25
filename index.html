@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark light" />
+  <title>VNR202 Study</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="backdrop backdrop-a"></div>
+  <div class="backdrop backdrop-b"></div>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div style="display:grid;gap:12px;align-items:start;">
+        <div class="sidebar-actions quad">
+          <div class="refresh-wrapper" style="position: relative;">
+            <button id="reloadButton" class="secondary" style="width: 100%; height: 100%;">Refresh</button>
+            <div id="refreshDropdown" class="refresh-dropdown hidden">
+              <button id="refreshAllBtn" class="refresh-dropdown-item" type="button">Tạo mới hoàn toàn</button>
+              <button id="refreshKeepStarredBtn" class="refresh-dropdown-item" type="button">Giữ câu đánh dấu</button>
+              <button id="refreshShuffleBtn" class="refresh-dropdown-item" type="button">Tạo mới & trộn câu</button>
+            </div>
+          </div>
+          <button id="autoNextButton" class="secondary toggle-button" type="button">Tự next</button>
+          <button id="noteToggleBtn" class="secondary" type="button">Note</button>
+          <button id="nekoToggleBtn" class="secondary toggle-button active" type="button">Neko</button>
+        </div>
+        <div class="sidebar-actions">
+          <p class="wrong-count-line">Câu sai: <strong id="wrongCount">0</strong></p>
+          <p class="active-learners-line">Đang học: <strong id="activeCount">1</strong></p>
+        </div>
+        <div class="starred-filter-wrapper">
+          <button type="button" id="starredFilterBtn" class="starred-filter-btn" title="Bật/Tắt chỉ xem câu đã chú ý">
+            ★ Câu hỏi đã đánh dấu: <strong id="starredCount">0</strong>
+          </button>
+        </div>
+
+        <div class="chat-container">
+          <div class="chat-header">
+            <div class="chat-title-wrapper" style="display: flex; align-items: center; gap: 8px;">
+              <strong>Thảo luận</strong>
+              <span id="chatBadge" class="chat-badge hidden">0</span>
+            </div>
+            <button id="chatToggleBtn" class="chat-toggle-btn" title="Thu gọn/Mở rộng" type="button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="18 15 12 9 6 15"></polyline>
+              </svg>
+            </button>
+          </div>
+          <div class="chat-messages" id="chatMessages">
+            <div class="chat-empty">Đang tải tin nhắn...</div>
+          </div>
+          <div class="chat-input-wrapper">
+            <div id="imagePreview" class="chat-image-preview hidden">
+              <img id="previewImg" src="" alt="Preview" />
+              <button type="button" id="removePreviewBtn" class="remove-preview-btn" title="Gỡ ảnh">&times;</button>
+            </div>
+            <div id="emojiPicker" class="emoji-picker hidden">
+              <div class="emoji-list" id="emojiList"></div>
+            </div>
+            <form class="chat-input-row" id="chatForm">
+              <button type="button" id="emojiToggleBtn" class="emoji-toggle-btn" title="Chọn emoji">😊</button>
+              <input type="text" id="chatInput" placeholder="Nhắn gì đó..." maxlength="500" autocomplete="off" />
+              <button type="submit" id="chatSendBtn">Gửi</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="stage">
+      <section class="hero-card" id="heroCard"></section>
+
+      <section class="question-card hidden" id="questionCard">
+        <div class="question-topbar">
+          <div>
+            <button id="resetQuestionButton" class="secondary reset-q-btn" title="Làm lại câu này"
+              type="button">↺</button>
+            <button id="starQuestionButton" class="secondary star-q-btn" title="Đánh dấu sao" type="button"
+              style="padding: 4px 8px;">★</button>
+            <span class="pill" id="questionBadge">Câu hỏi</span>
+            <span class="pill soft" id="sourceBadge">Nguồn</span>
+          </div>
+          <div class="progress-wrapper-container" style="display: flex; align-items: center; gap: 8px;">
+            <div class="progress-wrapper">
+              <div class="progress-text" id="progressText" role="button" tabindex="0" title="Chọn câu hỏi">0 / 0</div>
+              <div class="progress-dropdown hidden" id="progressDropdown"></div>
+            </div>
+            <button id="searchQuestionButton" class="secondary search-q-btn" title="Tìm kiếm câu hỏi" type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="question-search-row hidden" id="questionSearchRow">
+          <input type="text" id="questionSearchInput" placeholder="Tìm kiếm trong ngân hàng câu hỏi..."
+            class="question-search-input" autocomplete="off" />
+        </div>
+
+        <div class="search-results-container hidden" id="searchResultsContainer"></div>
+
+        <div class="question-interactive-area" id="questionInteractiveArea">
+          <div class="prompt" id="promptText"></div>
+
+          <div class="option-list" id="optionList"></div>
+
+          <div class="submit-row hidden" id="submitRow">
+            <button id="submitButton">Xác nhận</button>
+            <button id="clearSelectionButton" class="secondary">Bỏ chọn</button>
+          </div>
+
+          <div class="nav-row">
+            <button id="prevButton" class="secondary">Quay lại</button>
+            <button id="nextButton" disabled>Tiếp theo</button>
+          </div>
+
+          <div class="feedback hidden" id="feedback"></div>
+        </div>
+      </section>
+
+      <section class="question-card hidden" id="noteCard">
+        <div class="note-search-wrapper">
+          <input type="text" id="noteSearchInput" placeholder="Tìm kiếm nhanh keyword..." class="note-search-input"
+            autocomplete="off" />
+        </div>
+        <div class="note-content-container" id="noteContentContainer">
+          <!-- Dynamically populated from notes_data.js -->
+        </div>
+      </section>
+
+      <section class="empty-state" id="emptyState">
+        <div class="empty-figure"></div>
+        <h3>Chưa có bộ câu hỏi</h3>
+        <p>
+          Hãy bấm <strong>Tải ques.md</strong> hoặc dán nội dung file vào khung bên trái để bắt đầu.
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <div id="imageModal" class="modal hidden">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImg">
+  </div>
+
+  <script src="notes_data.js"></script>
+  <script src="neko.js"></script>
+  <script src="app.js?v=1.1"></script>
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+</body>
+
+</html>
