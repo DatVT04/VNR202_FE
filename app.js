@@ -2042,3 +2042,57 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+
+/* ==========================================================================
+   MOBILE: bảng điều khiển dạng bottom-sheet
+   Trên điện thoại, sidebar được ẩn và chỉ mở khi bấm nút ☰,
+   để lúc học chỉ còn: đề bài -> chọn đáp án -> Tiếp theo.
+   ========================================================================== */
+(function initMobileSheet() {
+  const menuBtn = document.getElementById('mobileMenuBtn');
+  const overlay = document.getElementById('mobileMenuOverlay');
+  const sidebar = document.querySelector('.sidebar');
+  if (!menuBtn || !overlay || !sidebar) return;
+
+  function isSheetMode() {
+    return window.matchMedia('(max-width: 768px)').matches;
+  }
+
+  function openSheet() {
+    document.body.classList.add('sidebar-open');
+    menuBtn.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeSheet() {
+    document.body.classList.remove('sidebar-open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+  }
+
+  menuBtn.addEventListener('click', () => {
+    if (document.body.classList.contains('sidebar-open')) closeSheet();
+    else openSheet();
+  });
+
+  overlay.addEventListener('click', closeSheet);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeSheet();
+  });
+
+  // Bấm một chức năng trong tấm trượt (Note, Tự next, Neko, lọc sao, làm mới...)
+  // thì đóng luôn để quay lại màn hình học. Trừ nút Refresh vì nó mở menu con,
+  // và trừ khu vực chat vì còn phải gõ tin nhắn.
+  sidebar.addEventListener('click', (e) => {
+    if (!isSheetMode()) return;
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    if (btn.id === 'reloadButton') return;
+    if (btn.closest('.chat-container')) return;
+    setTimeout(closeSheet, 120);
+  });
+
+  // Quay về desktop / xoay ngang thì trả trạng thái về bình thường
+  window.addEventListener('resize', () => {
+    if (!isSheetMode()) closeSheet();
+  });
+})();
