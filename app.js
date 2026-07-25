@@ -1023,7 +1023,10 @@ function loadDataset(text, sourceName = 'ques.md') {
   updateStats();
 
   if (parsed.length === 0) {
-    els.parseInfo.textContent = `Không đọc được câu hỏi nào từ ${sourceName}. Hãy kiểm tra định dạng hoặc dán lại nội dung.`;
+    if (els.parseInfo) {
+      els.parseInfo.textContent = `Không đọc được câu hỏi nào từ ${sourceName}. Hãy kiểm tra định dạng hoặc dán lại nội dung.`;
+    }
+    showLoadError(`Không đọc được câu hỏi nào từ ${sourceName}. Kiểm tra lại định dạng file (đề bài → A. B. C. D. → @@@đáp án###).`);
     setVisibility(false);
     return;
   }
@@ -1045,6 +1048,14 @@ function loadDataset(text, sourceName = 'ques.md') {
   }
 }
 
+// Hiện lỗi ra màn hình thay vì im lặng — để còn biết đường mà sửa,
+// nhất là trên điện thoại nơi không mở được console.
+function showLoadError(message) {
+  if (!els.emptyState) return;
+  const box = els.emptyState.querySelector('p');
+  if (box) box.textContent = message;
+}
+
 async function loadDefaultFile() {
   try {
     const response = await fetch('./ques.md', { cache: 'no-store' });
@@ -1055,9 +1066,15 @@ async function loadDefaultFile() {
     loadDataset(text, 'ques.md');
   } catch (error) {
     if (els.parseInfo) els.parseInfo.textContent = '';
+    showLoadError(`Không tải được ques.md (${error && error.message ? error.message : 'lỗi không rõ'}). Thử tải lại trang.`);
     setVisibility(false);
   }
 }
+
+// Gọi ngay tại đây thay vì cuối file: fetch là bất đồng bộ nên phần còn lại của
+// script vẫn chạy xong trước. Nhờ vậy nếu một widget phía dưới (Neko, chat...)
+// lỗi thì bộ câu hỏi VẪN tải được.
+loadDefaultFile();
 
 if (els.fileInput) {
   els.fileInput.addEventListener('change', async (event) => {
@@ -1972,13 +1989,17 @@ if (typeof window.notesData !== 'undefined') {
 }
 
 if (els.nekoToggleBtn) {
-  if (window.neko) {
+  if (window.neko && typeof window.neko.isEnabled === 'function') {
     els.nekoToggleBtn.classList.toggle('active', window.neko.isEnabled());
+  } else {
+    els.nekoToggleBtn.classList.remove('active');
   }
   els.nekoToggleBtn.addEventListener('click', () => {
     if (window.neko) {
-      const isNowEnabled = window.neko.toggle();
-      els.nekoToggleBtn.classList.toggle('active', isNowEnabled);
+      const isNowEnabled = typeof window.neko.toggle === 'function'
+        ? window.neko.toggle()
+        : false;
+      els.nekoToggleBtn.classList.toggle('active', Boolean(isNowEnabled));
 
       // Sync neko state to server for all clients
       fetch('/api/stats', {
@@ -2021,4 +2042,3 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-loadDefaultFile();

@@ -5,12 +5,19 @@
   // Respect user preference for reduced motion
   const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (isReducedMotion) {
+    // Stub phải có ĐỦ mọi hàm mà app.js gọi tới.
+    // Thiếu một hàm là app.js ném TypeError và dừng hẳn -> không tải được câu hỏi.
     window.neko = {
-      toggle: () => { },
+      toggle: () => false,
+      setEnabled: () => { },
+      isEnabled: () => false,
+      onQuestionStart: () => { },
+      onQuestionAnswered: () => { },
       triggerCorrect: () => { },
       triggerWrong: () => { },
       triggerChat: () => { },
       triggerStreak: () => { },
+      triggerComfort: () => { },
       showBubble: () => { },
     };
     return;
@@ -26,13 +33,24 @@
   // và còn tốn pin -> mặc định TẮT. Người dùng vẫn bật tay được bằng nút "Neko",
   // và lựa chọn đó được nhớ lại cho các lần sau.
   const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
-  const storedNekoPref = localStorage.getItem("vnr202.neko.enabled");
+
+  // localStorage có thể ném lỗi (Safari riêng tư, chặn cookie...) -> bọc lại cho an toàn
+  const safeStorage = {
+    get(key) {
+      try { return localStorage.getItem(key); } catch (e) { return null; }
+    },
+    set(key, value) {
+      try { localStorage.setItem(key, value); } catch (e) { /* bỏ qua */ }
+    },
+  };
+
+  const storedNekoPref = safeStorage.get("vnr202.neko.enabled");
 
   let isEnabled = storedNekoPref !== null
     ? storedNekoPref === "true"
     : !isTouchDevice;
 
-  localStorage.setItem("vnr202.neko.enabled", String(isEnabled));
+  safeStorage.set("vnr202.neko.enabled", String(isEnabled));
 
   let nekoPosX = window.innerWidth / 2;
   let nekoPosY = window.innerHeight / 2;
@@ -623,7 +641,7 @@
   window.neko = {
     toggle: function (force) {
       isEnabled = force !== undefined ? force : !isEnabled;
-      localStorage.setItem("vnr202.neko.enabled", isEnabled);
+      safeStorage.set("vnr202.neko.enabled", String(isEnabled));
       if (isEnabled) {
         nekoEl.style.display = "block";
         resetIdle();
@@ -762,7 +780,7 @@
     setEnabled: function (enabled) {
       if (isEnabled === enabled) return; // No change
       isEnabled = enabled;
-      localStorage.setItem("vnr202.neko.enabled", isEnabled);
+      safeStorage.set("vnr202.neko.enabled", String(isEnabled));
       if (isEnabled) {
         nekoEl.style.display = "block";
         resetIdle();
